@@ -1,0 +1,13 @@
+.wrapper {
+  padding: 20px;
+}
+
+.ant-layout-sider-zero-width-trigger{
+  top:-42px !important;
+}
+
+/* .ant-table.ant-table-rtl { overflow-x: scroll; } */
+
+.ant-table{
+  font-size: 7px !important;
+}
