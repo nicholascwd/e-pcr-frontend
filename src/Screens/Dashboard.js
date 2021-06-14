@@ -1,5 +1,5 @@
-import React from 'react';
-import { getUser, removeUserSession } from '../Utils/Common';
+import React from "react";
+import { getUser, removeUserSession } from "../Utils/Common";
 
 function Dashboard(props) {
   const user = getUser();
@@ -7,12 +7,13 @@ function Dashboard(props) {
   // handle click event of logout button
   const handleLogout = () => {
     removeUserSession();
-    window.open('/login','_self');
+    window.open("/login", "_self");
   };
 
   return (
     <div>
-      Welcome {user.name}!<br /><br />
+      Welcome {user.name}!<br />
+      <br />
       <input type="button" onClick={handleLogout} value="Logout" />
     </div>
   );
