@@ -1,4 +1,3 @@
-import axios from "axios";
 import { decryptAESKEY, testEncrypt } from "./KeyStorage";
 
 // return the user data from the local storage

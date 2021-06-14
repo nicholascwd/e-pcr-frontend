@@ -3,6 +3,7 @@ import { PageHeader } from "antd";
 import { Typography, Space, Button, Table } from "antd";
 import axios from "axios";
 import moment from "moment-timezone";
+
 import {
   getToken,
   getUser,
@@ -15,12 +16,21 @@ import {
   decryptObject,
   encryptField,
 } from "../Utils/EncryptContents";
+import { restraintsPdfExport } from "./PDFExport/RestraintsExport";
+import { restraintsColumns } from "./AntTablesForms/RestraintsTable";
+import { progressRecordColumns } from "./AntTablesForms/ProgressRecordTable";
+import { progressRecordPdfExport } from "./PDFExport/ProgressRecordExport";
 
 function PatientProfile(props) {
   const [patientData, setPatientData] = useState();
   const [patientError, setPatientError] = useState();
   const [restraintsSubmissions, setRestraintsSubmissions] = useState();
   const [progressRecordSubmissions, setProgressRecordSubmissions] = useState();
+
+  // Or use javascript directly:
+
+
+
 
   let { bedNo } = useParams();
   const token = getToken();
@@ -32,7 +42,7 @@ function PatientProfile(props) {
     axios
       .get(`${process.env.REACT_APP_API_URL}/users/verifyToken?token=${token}`)
       .then((response) => {
-        console.log(response);
+        // console.log(response);
       })
       .catch((error) => {
         removeUserSession();
@@ -46,16 +56,16 @@ function PatientProfile(props) {
       )
       .then((response) => {
         setPatientData(response.data[0]);
-        console.log(response.data[0]);
+        // console.log(response.data[0]);
       })
       .catch((error) => {
         console.log(error);
-        setPatientError(error.response.data.error);
+        // setPatientError(error.response.data.error);
       });
   }, []);
 
   useEffect(() => {
-    console.log("pd", patientData);
+    // console.log("pd", patientData);
     //    //obtain resident restraint's form submission history
     if (patientData) {
       axios
@@ -87,6 +97,7 @@ function PatientProfile(props) {
             el.formVals = decryptObject(el.formData);
           });
           setProgressRecordSubmissions(formDataPros2);
+          // console.log(formDataPros2)
         })
         .catch((error) => {
           console.log(error);
@@ -97,6 +108,8 @@ function PatientProfile(props) {
   function handleClickRestraints() {
     props.history.push("/forms/restraints_form/" + patientData.uuid, "_self");
   }
+
+
   function handleClickProgressRecord() {
     props.history.push(
       "/forms/progress_record_form/" + patientData.uuid,
@@ -107,192 +120,20 @@ function PatientProfile(props) {
   function handleBack() {
     props.history.push("/select_patient", "_self");
   }
+  function generateRestraintsPDF(){
+    restraintsPdfExport(patientData,restraintsSubmissions)
+  }
+  function generateProgressRecordPDF(){
+    progressRecordPdfExport(patientData,progressRecordSubmissions)
+  }
 
-  const restraintsColumns = [
-    {
-      title: "Date",
-      key: "_id",
-      dataIndex: "formVals",
-      fixed: "left",
-      width: 100,
-      render: (text) => <p>{JSON.parse(text).date}</p>,
-    },
-    {
-      title: "Time",
-      key: "_id",
-      dataIndex: "formVals",
-      render: (text) => <p>{JSON.parse(text).time}</p>,
-    },
-    {
-      title: "Applied Correctly",
-      key: "_id",
-      dataIndex: "formVals",
-      render: (text) => <p>{JSON.parse(text).r1}</p>,
-    },
-    {
-      title: "Comfortable",
-      key: "_id",
-      dataIndex: "formVals",
-      render: (text) => <p>{JSON.parse(text).r2}</p>,
-    },
-    {
-      title: "Circulation",
-      key: "_id",
-      dataIndex: "formVals",
-      render: (text) => <p>{JSON.parse(text).r3}</p>,
-    },
-    {
-      title: "ROM",
-      key: "_id",
-      dataIndex: "formVals",
-      render: (text) => <p>{JSON.parse(text).r4}</p>,
-    },
-    {
-      title: "Skin Checked",
-      key: "_id",
-      dataIndex: "formVals",
-      render: (text) => <p>{JSON.parse(text).r5}</p>,
-    },
-    {
-      title: "Type of Restraints",
-      key: "_id",
-      dataIndex: "formVals",
-      render: (text) => <p>{JSON.parse(text)["r-restraints-type"]}</p>,
-    },
-    {
-      title: "Remarks",
-      key: "_id",
-      dataIndex: "formVals",
-      render: (text) => <p>{JSON.parse(text)["r-remarks"]}</p>,
-    },
-    {
-      title: "Staff",
-      key: "_id",
-      dataIndex: "staff",
-    },
-    {
-      title: "Submitted D/T",
-      key: "_id",
-      dataIndex: "creationDate",
-      render: (text) => <p>{moment(text).format("MMMM Do YYYY, h:mm:ss a")}</p>,
-      fixed: "right",
-      width: 100,
-    },
-  ];
-
-  const progressRecordColumns = [
-    {
-      title: "Date",
-      key: "_id",
-      dataIndex: "formVals",
-      fixed: "left",
-      width: 100,
-      render: (text) => <p>{JSON.parse(text).date}</p>,
-    },
-    {
-      title: "Time",
-      key: "_id",
-      dataIndex: "formVals",
-      render: (text) => <p>{JSON.parse(text).time}</p>,
-    },
-    {
-      title: "General Condition",
-      key: "_id",
-      dataIndex: "formVals",
-      render: (text) => <p>{JSON.parse(text).p1}</p>,
-    },
-    {
-      title: "Mental State",
-      key: "_id",
-      dataIndex: "formVals",
-      render: (text) => <p>{JSON.parse(text).p2}</p>,
-    },
-    {
-      title: "Skin Care",
-      key: "_id",
-      dataIndex: "formVals",
-      render: (text) => <p>{JSON.parse(text).p3}</p>,
-    },
-    {
-      title: "Hygiene/Bathing",
-      key: "_id",
-      dataIndex: "formVals",
-      render: (text) => <p>{JSON.parse(text).p4}</p>,
-    },
-    {
-      title: "Oral Care",
-      key: "_id",
-      dataIndex: "formVals",
-      render: (text) => <p>{JSON.parse(text).p5}</p>,
-    },
-    {
-      title: "Feeding",
-      key: "_id",
-      dataIndex: "formVals",
-      render: (text) => <p>{JSON.parse(text).p6}</p>,
-    },
-    {
-      title: "Bladder",
-      key: "_id",
-      dataIndex: "formVals",
-      render: (text) => <p>{JSON.parse(text).p7}</p>,
-    },
-    {
-      title: "Bowel",
-      key: "_id",
-      dataIndex: "formVals",
-      render: (text) => <p>{JSON.parse(text).p8}</p>,
-    },
-    {
-      title: "Mobility",
-      key: "_id",
-      dataIndex: "formVals",
-      render: (text) => <p>{JSON.parse(text).p9}</p>,
-    },
-    {
-      title: "Rest at Night",
-      key: "_id",
-      dataIndex: "formVals",
-      render: (text) => <p>{JSON.parse(text).p10}</p>,
-    },
-    {
-      title: "Therapy",
-      key: "_id",
-      dataIndex: "formVals",
-      render: (text) => <p>{JSON.parse(text).p11}</p>,
-    },
-    {
-      title: "Visited",
-      key: "_id",
-      dataIndex: "formVals",
-      render: (text) => <p>{JSON.parse(text).p12}</p>,
-    },
-    {
-      title: "Remarks",
-      key: "_id",
-      dataIndex: "formVals",
-      render: (text) => <p>{JSON.parse(text)["r-remarks"]}</p>,
-    },
-    {
-      title: "Staff",
-      key: "_id",
-      dataIndex: "staff",
-    },
-    {
-      title: "Submitted D/T",
-      key: "_id",
-      dataIndex: "creationDate",
-      render: (text) => <p>{moment(text).format("MMMM Do YYYY, h:mm:ss a")}</p>,
-      fixed: "right",
-      width: 100,
-    },
-  ];
 
   return (
     <>
       <Button style={{ margin: "10px" }} onClick={handleBack} type="default">
         Back to patient selector
       </Button>
+    
       <PageHeader className="site-page-header" title="Patient Profile" />
       <div style={{ padding: "30px" }}>
         <Space direction="vertical" size="middle">
@@ -324,7 +165,9 @@ function PatientProfile(props) {
               <br></br>
               <br></br>
               <h3>Restraints Form submission history</h3>
-
+              <Button style={{ margin: "10px" }} onClick={generateRestraintsPDF} type="default">
+              Export Restraints Data
+              </Button>
               <Table
                 columns={restraintsColumns}
                 dataSource={restraintsSubmissions}
@@ -333,6 +176,9 @@ function PatientProfile(props) {
               />
 
               <h3>Progress Record Form submission history</h3>
+              <Button style={{ margin: "10px" }} onClick={generateProgressRecordPDF} type="default">
+              Export Progress Record Data
+              </Button>
               <Table
                 columns={progressRecordColumns}
                 dataSource={progressRecordSubmissions}
