@@ -10,8 +10,8 @@ export const getUser = () => {
 // return the token from the local storage
 // sets AES key into the session storage if blank.\
 export const getToken = () => {
-  const SignedSymmmetricKey = localStorage.getItem('SignedSymmmetricKey');
-  if (!SignedSymmmetricKey && window.location.pathname !== '/enroll') {
+  const EncryptedSymmmetricKey = localStorage.getItem('EncryptedSymmmetricKey');
+  if (!EncryptedSymmmetricKey && window.location.pathname !== '/enroll') {
     window.open('/enroll', '_self');
   }
   const token = localStorage.getItem('token');

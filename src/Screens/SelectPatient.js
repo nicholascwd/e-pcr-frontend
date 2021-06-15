@@ -47,7 +47,7 @@ function SelectPatient(props) {
   };
 
   function handleSubmit() {
-    // props.history.push('/patient_profile/' + selected, '_self');
+    // move to this once implemented api versioning props.history.push('/patient_profile/' + selected, '_self');
     window.open('/patient_profile/' + selected, '_self');
   }
 
