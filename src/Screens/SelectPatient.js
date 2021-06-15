@@ -1,32 +1,21 @@
-import React, { useEffect, useState } from "react";
-import { PageHeader } from "antd";
-import { Typography, AutoComplete, Space, Button, Input } from "antd";
-import axios from "axios";
-import {
-  getToken,
-  getUser,
-  removeUserSession,
-  setUserSession,
-} from "../Utils/Common";
-import { decryptField } from "../Utils/EncryptContents";
+import React, { useEffect, useState } from 'react';
+import { Typography, AutoComplete, Space, Button, PageHeader } from 'antd';
+import axios from 'axios';
+import { getToken, removeUserSession } from '../Utils/Common';
 
 function SelectPatient(props) {
-  const { Text, Link } = Typography;
+  const { Text } = Typography;
   const [options, setOptions] = useState();
   const [selected, setSelected] = useState();
 
   useEffect(() => {
     const token = getToken();
     if (!token) {
-      props.history.push("/login");
+      props.history.push('/login');
       return;
     }
     axios
       .get(`${process.env.REACT_APP_API_URL}/users/verifyToken?token=${token}`)
-      .then((response) => {
-        //console.log(response)
-        //console.log(getUser())
-      })
       .catch((error) => {
         removeUserSession();
       });
@@ -58,13 +47,14 @@ function SelectPatient(props) {
   };
 
   function handleSubmit() {
-    props.history.push("/patient_profile/" + selected, "_self");
+    // props.history.push('/patient_profile/' + selected, '_self');
+    window.open('/patient_profile/' + selected, '_self');
   }
 
   return (
     <>
       <PageHeader className="site-page-header" title="Select Patient" />
-      <div style={{ padding: "30px" }}>
+      <div style={{ padding: '30px' }}>
         <Space direction="vertical" size="middle">
           <Text>Input Patient Bed</Text>
 

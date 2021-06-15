@@ -1,46 +1,33 @@
-import React, { useState, useEffect } from "react";
+import React, { useState, useEffect } from 'react';
+import { Switch, useHistory } from 'react-router-dom';
+import { Layout, Menu, Row, Alert, Col, Avatar } from 'antd';
 import {
-  BrowserRouter,
-  Switch,
-  Route,
-  NavLink,
-  useHistory,
-  useParams,
-} from "react-router-dom";
-import { Layout, Menu, Button, Row, Alert, Col, Avatar } from "antd";
-import {
-  BarChartOutlined,
   FileTextOutlined,
   SettingOutlined,
   BellOutlined,
-} from "@ant-design/icons";
-import axios from "axios";
-import logo from "./logo.svg";
-import "./App.css";
-import "antd/dist/antd.css";
-import {
-  getToken,
-  getUser,
-  removeUserSession,
-  setUserSession,
-} from "./Utils/Common";
-import PrivateRoute from "./Utils/PrivateRoute";
-import PublicRoute from "./Utils/PublicRoute";
-import Login from "./Screens/Login";
-import Dashboard from "./Screens/Dashboard";
-import SelectPatient from "./Screens/SelectPatient";
-import Announcement from "./Screens/Announcement";
-import PatientProfile from "./Screens/PatientProfile";
-import RestraintsForm from "./Screens/Forms/RestraintsForm";
-import ResidentsModuleMainList from "./Screens/ResidentsModule/MainList";
-import AdmitResident from "./Screens/ResidentsModule/AdmitPatient";
-import ProgressRecordForm from "./Screens/Forms/ProgressRecordForm";
-import Enroll from "./Screens/Enroll";
+} from '@ant-design/icons';
+import axios from 'axios';
+import './App.css';
+import 'antd/dist/antd.css';
+import { getToken, getUser, removeUserSession } from './Utils/Common';
+import PrivateRoute from './Utils/PrivateRoute';
+import PublicRoute from './Utils/PublicRoute';
+import Login from './Screens/Login';
+import Dashboard from './Screens/Dashboard';
+import SelectPatient from './Screens/SelectPatient';
+import Announcement from './Screens/Announcement';
+import PatientProfile from './Screens/PatientProfile';
+import RestraintsForm from './Screens/Forms/RestraintsForm';
+import ResidentsModuleMainList from './Screens/ResidentsModule/MainList';
+import AdmitResident from './Screens/ResidentsModule/AdmitPatient';
+import ProgressRecordForm from './Screens/Forms/ProgressRecordForm';
+import Enroll from './Screens/Enroll';
+import UsersModule from './Screens/UsersModule';
+import AddUser from './Screens/UsersModule/AddUser';
 
 function App() {
   const [authLoading, setAuthLoading] = useState(true);
   const [userObject, setUserObject] = useState({ username: null });
-  const [sideMenuCollasped, setSideMenuCollasped] = useState(false);
   const [networkErr, setNetworkErr] = useState(false);
   const { Header, Footer, Sider, Content } = Layout;
   const history = useHistory();
@@ -50,7 +37,7 @@ function App() {
     axios
       .get(`${process.env.REACT_APP_API_URL}/networkTest`, { timeout: 3000 })
       .then((response) => {
-        console.log("IP Whitelisted");
+        console.log('IP Whitelisted');
         setNetworkErr(false);
       })
       .catch((error) => {
@@ -60,12 +47,10 @@ function App() {
     const token = getToken();
     if (
       !token &&
-      window.location.pathname !== "/login" &&
-      window.location.pathname !== "/enroll"
+      window.location.pathname !== '/login' &&
+      window.location.pathname !== '/enroll'
     ) {
-      // history.push("/login")
-      window.open("/login", "_self");
-      //console.log(window.location.pathname)
+      window.open('/login', '_self');
       return;
     }
     axios
@@ -86,19 +71,10 @@ function App() {
   if (authLoading && getToken()) {
     return <div className="content">Checking Authentication...</div>;
   }
-  // handle click event of logout button
-  const handleLogout = () => {
-    removeUserSession();
-    window.open("/login", "_self");
-  };
-
-  const onSideMenuCollapse = (collapsed) => {
-    setSideMenuCollasped(collapsed);
-  };
 
   return (
     <div className="App">
-      <Layout style={{ minHeight: "100vh" }}>
+      <Layout style={{ minHeight: '100vh' }}>
         <Header className="header">
           <div className="logo" />
           <Row justify="end">
@@ -107,15 +83,13 @@ function App() {
                 <Col span={1}>
                   {<Avatar size={40}>{userObject.username}</Avatar>}
                 </Col>
-                <Col span={1}>
-                  {/* {<Button onClick={handleLogout()}>Log Out</Button>} */}
-                </Col>
+                <Col span={1}></Col>
               </>
             )}
           </Row>
         </Header>
         <Layout>
-          {window.location.pathname !== "/login" ? (
+          {window.location.pathname !== '/login' ? (
             <>
               <Sider
                 breakpoint="lg"
@@ -128,32 +102,41 @@ function App() {
                 }}
               >
                 <div className="logo" />
-                <Menu theme="dark" mode="inline" defaultSelectedKeys={["1"]}>
+                <Menu theme="dark" mode="inline" defaultSelectedKeys={['1']}>
                   <Menu.Item
                     key="1"
                     icon={<FileTextOutlined />}
-                    onClick={() => history.push("/select_patient")}
+                    onClick={() => history.push('/select_patient')}
                   >
                     Forms
                   </Menu.Item>
                   <Menu.Item
                     key="2"
                     icon={<SettingOutlined />}
-                    onClick={() => history.push("/residents_module")}
+                    onClick={() => history.push('/residents_module')}
                   >
                     Residents Module
                   </Menu.Item>
+                  {userObject.role === 'full' && (
+                    <Menu.Item
+                      key="3"
+                      icon={<SettingOutlined />}
+                      onClick={() => history.push('/users_module')}
+                    >
+                      Users Module
+                    </Menu.Item>
+                  )}
                   <Menu.Item
-                    key="3"
+                    key="4"
                     icon={<BellOutlined />}
-                    onClick={() => history.push("/announcement")}
+                    onClick={() => history.push('/announcement')}
                   >
                     Announcements
                   </Menu.Item>
                   <Menu.Item
-                    key="4"
+                    key="5"
                     icon={<BellOutlined />}
-                    onClick={() => history.push("/settings")}
+                    onClick={() => history.push('/settings')}
                   >
                     Settings
                   </Menu.Item>
@@ -170,7 +153,7 @@ function App() {
                 description="Please connect to TLR Wifi"
                 type="error"
                 showIcon
-                style={{ textAlign: "left" }}
+                style={{ textAlign: 'left' }}
               />
             ) : (
               <></>
@@ -184,33 +167,43 @@ function App() {
                   <PrivateRoute path="/announcement" component={Announcement} />
                   <PrivateRoute
                     exact
-                    path={["/select_patient", "/"]}
+                    path={['/select_patient', '/']}
                     component={SelectPatient}
                   />
                   <PrivateRoute
                     exact
-                    path={["/patient_profile/:bedNo", "/"]}
+                    path={['/patient_profile/:bedNo', '/']}
                     component={PatientProfile}
                   />
                   <PrivateRoute
                     exact
-                    path={["/forms/restraints_form/:uuid", "/"]}
+                    path={['/forms/restraints_form/:uuid', '/']}
                     component={RestraintsForm}
                   />
                   <PrivateRoute
                     exact
-                    path={["/forms/progress_record_form/:uuid", "/"]}
+                    path={['/forms/progress_record_form/:uuid', '/']}
                     component={ProgressRecordForm}
                   />
                   <PrivateRoute
                     exact
-                    path={["/residents_module/", "/"]}
+                    path={['/residents_module/', '/']}
                     component={ResidentsModuleMainList}
                   />
                   <PrivateRoute
                     exact
-                    path={["/residents_module/admit", "/"]}
+                    path={['/residents_module/admit', '/']}
                     component={AdmitResident}
+                  />
+                  <PrivateRoute
+                    exact
+                    path={['/users_module', '/']}
+                    component={UsersModule}
+                  />
+                  <PrivateRoute
+                    exact
+                    path={['/users_module/addUser', '/']}
+                    component={AddUser}
                   />
                 </Switch>
               </div>

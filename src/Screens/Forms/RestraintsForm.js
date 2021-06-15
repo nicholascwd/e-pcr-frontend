@@ -1,35 +1,20 @@
-import React, { useEffect, useState } from "react";
+import React, { useEffect, useState } from 'react';
 import {
   PageHeader,
   Form,
   Select,
-  InputNumber,
-  Switch,
   Radio,
-  Slider,
   Button,
-  Upload,
-  Rate,
-  Checkbox,
-  Row,
-  Col,
   Result,
-} from "antd";
-import { Typography, AutoComplete, Space, Input, DatePicker } from "antd";
-import { UploadOutlined, InboxOutlined } from "@ant-design/icons";
-import axios from "axios";
-import {
-  getToken,
-  getUser,
-  removeUserSession,
-  setUserSession,
-} from "../../Utils/Common";
-import { useParams } from "react-router";
-import {
-  decryptField,
-  encryptField,
-  encryptObject,
-} from "../../Utils/EncryptContents";
+  Space,
+  Input,
+  DatePicker,
+} from 'antd';
+
+import axios from 'axios';
+import { getToken, getUser, removeUserSession } from '../../Utils/Common';
+import { useParams } from 'react-router';
+import { decryptField, encryptObject } from '../../Utils/EncryptContents';
 
 const { Option } = Select;
 const formItemLayout = {
@@ -43,7 +28,6 @@ const formItemLayout = {
 };
 
 function RestraintsForm(props) {
-  const { Text, Link } = Typography;
   const [patientData, setPatientData] = useState();
   const [patientError, setPatientError] = useState();
   const [staff, setStaff] = useState();
@@ -54,13 +38,12 @@ function RestraintsForm(props) {
   const token = getToken();
   useEffect(() => {
     if (!token) {
-      props.history.push("/login");
+      props.history.push('/login');
       return;
     }
     axios
       .get(`${process.env.REACT_APP_API_URL}/users/verifyToken?token=${token}`)
       .then((response) => {
-        //console.log(response)
         setStaff(getUser().username);
       })
       .catch((error) => {
@@ -76,7 +59,6 @@ function RestraintsForm(props) {
       )
       .then((response) => {
         setPatientData(response.data[0]);
-        //console.log(response.data[0])
       })
       .catch((error) => {
         console.log(error.response.data.error);
@@ -85,8 +67,9 @@ function RestraintsForm(props) {
   }, []);
 
   const onFinish = (values) => {
-    values["date"] = values["date"].format("YYYY-MM-DD");
-    console.log("Received values of form: ", JSON.stringify(values));
+    const dateTime = values['date'];
+    values['date'] = values['date'].format('YYYY-MM-DD');
+    console.log('Received values of form: ', JSON.stringify(values));
     //submit restraints form
     axios
       .post(
@@ -95,6 +78,7 @@ function RestraintsForm(props) {
           resident: uuid,
           formData: encryptObject(values),
           bed: patientData.bed,
+          dateTime: dateTime,
         },
         { headers: { token: token } }
       )
@@ -108,23 +92,23 @@ function RestraintsForm(props) {
       });
   };
   function handleNewPatient() {
-    props.history.push("/select_patient/", "_self");
+    props.history.push('/select_patient/', '_self');
   }
   function handleNewFormSamePatient() {
-    props.history.push("/patient_profile/" + patientData.bed, "_self");
+    props.history.push('/patient_profile/' + patientData.bed, '_self');
   }
 
   return (
     <>
       <Button
-        style={{ margin: "10px" }}
+        style={{ margin: '10px' }}
         onClick={handleNewFormSamePatient}
         type="default"
       >
         Back to patient profile
       </Button>
       <PageHeader className="site-page-header" title="Restraints Form" />
-      <div style={{ padding: "30px" }}>
+      <div style={{ padding: '30px' }}>
         <Space direction="vertical" size="middle">
           {patientData && staff && !submitted && (
             <>

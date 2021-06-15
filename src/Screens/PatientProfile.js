@@ -1,25 +1,15 @@
-import React, { useEffect, useState } from "react";
-import { PageHeader } from "antd";
-import { Typography, Space, Button, Table } from "antd";
-import axios from "axios";
-import moment from "moment-timezone";
+import React, { useEffect, useState } from 'react';
+import { PageHeader, Space, Button, Table } from 'antd';
+import axios from 'axios';
+import moment from 'moment-timezone';
 
-import {
-  getToken,
-  getUser,
-  removeUserSession,
-  setUserSession,
-} from "../Utils/Common";
-import { useParams } from "react-router";
-import {
-  decryptField,
-  decryptObject,
-  encryptField,
-} from "../Utils/EncryptContents";
-import { restraintsPdfExport } from "./PDFExport/RestraintsExport";
-import { restraintsColumns } from "./AntTablesForms/RestraintsTable";
-import { progressRecordColumns } from "./AntTablesForms/ProgressRecordTable";
-import { progressRecordPdfExport } from "./PDFExport/ProgressRecordExport";
+import { getToken, removeUserSession } from '../Utils/Common';
+import { useParams } from 'react-router';
+import { decryptField, decryptObject } from '../Utils/EncryptContents';
+import { restraintsPdfExport } from './PDFExport/RestraintsExport';
+import { restraintsColumns } from './AntTablesForms/RestraintsTable';
+import { progressRecordColumns } from './AntTablesForms/ProgressRecordTable';
+import { progressRecordPdfExport } from './PDFExport/ProgressRecordExport';
 
 function PatientProfile(props) {
   const [patientData, setPatientData] = useState();
@@ -29,20 +19,17 @@ function PatientProfile(props) {
 
   // Or use javascript directly:
 
-
-
-
   let { bedNo } = useParams();
   const token = getToken();
   useEffect(() => {
     if (!token) {
-      props.history.push("/login");
+      props.history.push('/login');
       return;
     }
     axios
       .get(`${process.env.REACT_APP_API_URL}/users/verifyToken?token=${token}`)
       .then((response) => {
-        // console.log(response);
+        //for debug
       })
       .catch((error) => {
         removeUserSession();
@@ -56,16 +43,14 @@ function PatientProfile(props) {
       )
       .then((response) => {
         setPatientData(response.data[0]);
-        // console.log(response.data[0]);
       })
       .catch((error) => {
         console.log(error);
-        // setPatientError(error.response.data.error);
+        setPatientError(error.response.data.error);
       });
   }, []);
 
   useEffect(() => {
-    // console.log("pd", patientData);
     //    //obtain resident restraint's form submission history
     if (patientData) {
       axios
@@ -106,36 +91,34 @@ function PatientProfile(props) {
   }, [patientData]);
 
   function handleClickRestraints() {
-    props.history.push("/forms/restraints_form/" + patientData.uuid, "_self");
+    props.history.push('/forms/restraints_form/' + patientData.uuid, '_self');
   }
-
 
   function handleClickProgressRecord() {
     props.history.push(
-      "/forms/progress_record_form/" + patientData.uuid,
-      "_self"
+      '/forms/progress_record_form/' + patientData.uuid,
+      '_self'
     );
   }
 
   function handleBack() {
-    props.history.push("/select_patient", "_self");
+    props.history.push('/select_patient', '_self');
   }
-  function generateRestraintsPDF(){
-    restraintsPdfExport(patientData,restraintsSubmissions)
+  function generateRestraintsPDF() {
+    restraintsPdfExport(patientData, restraintsSubmissions);
   }
-  function generateProgressRecordPDF(){
-    progressRecordPdfExport(patientData,progressRecordSubmissions)
+  function generateProgressRecordPDF() {
+    progressRecordPdfExport(patientData, progressRecordSubmissions);
   }
-
 
   return (
     <>
-      <Button style={{ margin: "10px" }} onClick={handleBack} type="default">
+      <Button style={{ margin: '10px' }} onClick={handleBack} type="default">
         Back to patient selector
       </Button>
-    
+
       <PageHeader className="site-page-header" title="Patient Profile" />
-      <div style={{ padding: "30px" }}>
+      <div style={{ padding: '30px' }}>
         <Space direction="vertical" size="middle">
           {patientData && (
             <>
@@ -146,9 +129,9 @@ function PatientProfile(props) {
                 <br></br>
                 NRIC: {decryptField(patientData.NRIC)}
                 <br></br>
-                Profile Creation:{" "}
+                Profile Creation:{' '}
                 {moment(patientData.creationDate).format(
-                  "MMMM Do YYYY, h:mm:ss a"
+                  'MMMM Do YYYY, h:mm:ss a'
                 )}
                 <br></br>
                 Status: {patientData.status}
@@ -165,24 +148,32 @@ function PatientProfile(props) {
               <br></br>
               <br></br>
               <h3>Restraints Form submission history</h3>
-              <Button style={{ margin: "10px" }} onClick={generateRestraintsPDF} type="default">
-              Export Restraints Data
+              <Button
+                style={{ margin: '10px' }}
+                onClick={generateRestraintsPDF}
+                type="default"
+              >
+                Export Restraints Data
               </Button>
               <Table
                 columns={restraintsColumns}
                 dataSource={restraintsSubmissions}
                 className="preview-batch-table"
-                scroll={{ x: "max-content" }}
+                scroll={{ x: 'max-content' }}
               />
 
               <h3>Progress Record Form submission history</h3>
-              <Button style={{ margin: "10px" }} onClick={generateProgressRecordPDF} type="default">
-              Export Progress Record Data
+              <Button
+                style={{ margin: '10px' }}
+                onClick={generateProgressRecordPDF}
+                type="default"
+              >
+                Export Progress Record Data
               </Button>
               <Table
                 columns={progressRecordColumns}
                 dataSource={progressRecordSubmissions}
-                scroll={{ x: "max-content" }}
+                scroll={{ x: 'max-content' }}
                 className="preview-batch-table"
               />
             </>

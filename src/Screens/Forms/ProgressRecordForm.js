@@ -1,32 +1,20 @@
-import React, { useEffect, useState } from "react";
+import React, { useEffect, useState } from 'react';
 import {
   PageHeader,
   Form,
   Select,
-  InputNumber,
-  Switch,
   Radio,
-  Slider,
   Button,
-  Upload,
-  Rate,
-  Checkbox,
-  Row,
-  Col,
   Result,
-} from "antd";
-import { Typography, AutoComplete, Space, Input, DatePicker } from "antd";
-import { UploadOutlined, InboxOutlined } from "@ant-design/icons";
-import moment from "moment-timezone";
-import axios from "axios";
-import {
-  getToken,
-  getUser,
-  removeUserSession,
-  setUserSession,
-} from "../../Utils/Common";
-import { useParams } from "react-router";
-import { decryptField, encryptObject } from "../../Utils/EncryptContents";
+  Space,
+  Input,
+  DatePicker,
+} from 'antd';
+import moment from 'moment-timezone';
+import axios from 'axios';
+import { getToken, getUser, removeUserSession } from '../../Utils/Common';
+import { useParams } from 'react-router';
+import { decryptField, encryptObject } from '../../Utils/EncryptContents';
 
 const { Option } = Select;
 const formItemLayout = {
@@ -40,7 +28,6 @@ const formItemLayout = {
 };
 
 function ProgressRecordForm(props) {
-  const { Text, Link } = Typography;
   const [patientData, setPatientData] = useState();
   const [patientError, setPatientError] = useState();
   const [staff, setStaff] = useState();
@@ -51,7 +38,7 @@ function ProgressRecordForm(props) {
   const token = getToken();
   useEffect(() => {
     if (!token) {
-      props.history.push("/login");
+      props.history.push('/login');
       return;
     }
     axios
@@ -82,8 +69,9 @@ function ProgressRecordForm(props) {
   }, []);
 
   const onFinish = (values) => {
-    values["date"] = values["date"].format("YYYY-MM-DD");
-    console.log("Received values of form: ", values);
+    const dateTime = values['date'];
+    values['date'] = values['date'].format('YYYY-MM-DD');
+    console.log('Received values of form: ', values);
     //submit restraints form
     axios
       .post(
@@ -91,6 +79,7 @@ function ProgressRecordForm(props) {
         {
           resident: uuid,
           formData: encryptObject(values),
+          dateTime: dateTime,
           bed: patientData.bed,
         },
         { headers: { token: token } }
@@ -105,23 +94,23 @@ function ProgressRecordForm(props) {
       });
   };
   function handleNewPatient() {
-    props.history.push("/select_patient/", "_self");
+    props.history.push('/select_patient/', '_self');
   }
   function handleNewFormSamePatient() {
-    props.history.push("/patient_profile/" + patientData.bed, "_self");
+    props.history.push('/patient_profile/' + patientData.bed, '_self');
   }
 
   return (
     <>
       <Button
-        style={{ margin: "10px" }}
+        style={{ margin: '10px' }}
         onClick={handleNewFormSamePatient}
         type="default"
       >
         Back to patient profile
       </Button>
       <PageHeader className="site-page-header" title="Progress Record Form" />
-      <div style={{ padding: "30px" }}>
+      <div style={{ padding: '30px' }}>
         <Space direction="vertical" size="middle">
           {patientData && staff && !submitted && (
             <>
@@ -132,9 +121,9 @@ function ProgressRecordForm(props) {
                 <br></br>
                 NRIC: {decryptField(patientData.NRIC)}
                 <br></br>
-                Profile Creation:{" "}
+                Profile Creation:{' '}
                 {moment(patientData.creationDate).format(
-                  "MMMM Do YYYY, h:mm:ss a"
+                  'MMMM Do YYYY, h:mm:ss a'
                 )}
                 <br></br>
                 Status: {patientData.status}
