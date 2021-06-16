@@ -9,6 +9,8 @@ import {
   Space,
   Input,
   DatePicker,
+  Col,
+  Checkbox,
 } from 'antd';
 import moment from 'moment-timezone';
 import axios from 'axios';
@@ -62,9 +64,9 @@ function ProgressRecordForm(props) {
         setPatientData(response.data[0]);
         //console.log(response.data[0])
       })
-      .catch((error) => {
-        console.log(error.response.data.error);
-        setPatientError(error.response.data.error);
+      .catch((err) => {
+        console.log(err);
+        // setPatientError(error.response.data.error);
       });
   }, []);
 
@@ -152,15 +154,11 @@ function ProgressRecordForm(props) {
                 }
               >
                 <Form.Item name="date" label="Date" required>
-                  <DatePicker required />
+                  <DatePicker />
                 </Form.Item>
 
                 <Form.Item name="time" label="Time" required>
-                  <Select
-                    placeholder="Select time of check"
-                    virtual={false}
-                    required
-                  >
+                  <Select placeholder="Select time of check" virtual={false}>
                     <Option value="ND">ND</Option>
                     <Option value="AM">AM</Option>
                     <Option value="PM">PM</Option>
@@ -172,6 +170,7 @@ function ProgressRecordForm(props) {
                     <Radio value="Satisfactory">Satisfactory</Radio>
                     <Radio value="Unwell">Unwell</Radio>
                     <Radio value="Poor">Poor</Radio>
+                    <Radio value="">NA</Radio>
                   </Radio.Group>
                 </Form.Item>
                 <Form.Item name="p2" label="Mental State">
@@ -182,6 +181,7 @@ function ProgressRecordForm(props) {
                       Behavioural Problem
                     </Radio>
                     <Radio value="Uncommunicative">Uncommunicative</Radio>
+                    <Radio value="">NA</Radio>
                   </Radio.Group>
                 </Form.Item>
                 <Form.Item name="p3" label="Skin Care">
@@ -189,6 +189,7 @@ function ProgressRecordForm(props) {
                     <Radio value="Intact">Intact</Radio>
                     <Radio value="Impaired/Rashes">Impaired/Rashes</Radio>
                     <Radio value="Wound Care">Wound Care</Radio>
+                    <Radio value="">NA</Radio>
                   </Radio.Group>
                 </Form.Item>
                 <Form.Item name="p4" label="Hygiene/Bathing">
@@ -196,6 +197,7 @@ function ProgressRecordForm(props) {
                     <Radio value="Self">Self</Radio>
                     <Radio value="Assisted Bath">Assisted Bath</Radio>
                     <Radio value="Bed Bath">Bed Bath</Radio>
+                    <Radio value="">NA</Radio>
                   </Radio.Group>
                 </Form.Item>
                 <Form.Item name="p5" label="Oral Care">
@@ -203,6 +205,7 @@ function ProgressRecordForm(props) {
                     <Radio value="Self">Self</Radio>
                     <Radio value="Assisted">Assisted</Radio>
                     <Radio value="Totally Dependent">Totally Dependent</Radio>
+                    <Radio value="">NA</Radio>
                   </Radio.Group>
                 </Form.Item>
                 <Form.Item name="p6" label="Feeding">
@@ -210,6 +213,7 @@ function ProgressRecordForm(props) {
                     <Radio value="Self">Self</Radio>
                     <Radio value="Assisted">Assisted</Radio>
                     <Radio value="NGT/PEG">NGT/PEG</Radio>
+                    <Radio value="">NA</Radio>
                   </Radio.Group>
                 </Form.Item>
                 <Form.Item name="p7" label="Bladder">
@@ -219,6 +223,7 @@ function ProgressRecordForm(props) {
                       Incontinent(Diaper)
                     </Radio>
                     <Radio value="IDC/IMC/SPC">IDC/IMC/SPC</Radio>
+                    <Radio value="">NA</Radio>
                   </Radio.Group>
                 </Form.Item>
                 <Form.Item name="p8" label="Bowel">
@@ -230,40 +235,45 @@ function ProgressRecordForm(props) {
                       Incontinent (Diaper)
                     </Radio>
                     <Radio value="Colostomy Care">Colostomy Care</Radio>
+                    <Radio value="">NA</Radio>
                   </Radio.Group>
                 </Form.Item>
                 <Form.Item name="p9" label="Mobility">
-                  <Radio.Group>
-                    <Radio value="Ambulant">Ambulant</Radio>
-                    <Radio value="Requires Wheelchair">
+                  <Checkbox.Group>
+                    <Checkbox value="Ambulant">Ambulant</Checkbox>
+                    <Checkbox value="Requires Wheelchair">
                       Requires Wheelchair
-                    </Radio>
-                    <Radio value="Requires Walking Aides">
+                    </Checkbox>
+                    <Checkbox value="Requires Walking Aides">
                       Requires Walking Aides
-                    </Radio>
-                    <Radio value="Requires 2hrly Turning">
+                    </Checkbox>
+                    <Checkbox value="Requires 2hrly Turning">
                       Requires 2hrly Turning
-                    </Radio>
-                  </Radio.Group>
+                    </Checkbox>
+                  </Checkbox.Group>
                 </Form.Item>
+
                 <Form.Item name="p10" label="Rest During Night">
                   <Radio.Group>
                     <Radio value="Good">Good</Radio>
                     <Radio value="Restless/Interrupted">
                       Restless/Interrupted
                     </Radio>
+                    <Radio value="">NA</Radio>
                   </Radio.Group>
                 </Form.Item>
                 <Form.Item name="p11" label="Therapy">
                   <Radio.Group>
                     <Radio value="Active Exercise">Active Exercise</Radio>
                     <Radio value="Passive Exercise">Passive Exercise</Radio>
+                    <Radio value="">NA</Radio>
                   </Radio.Group>
                 </Form.Item>
                 <Form.Item name="p12" label="Visited by Relatives/Friend">
                   <Radio.Group>
                     <Radio value="Yes">Yes</Radio>
                     <Radio value="No">No</Radio>
+                    <Radio value="">NA</Radio>
                   </Radio.Group>
                 </Form.Item>
 

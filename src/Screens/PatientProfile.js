@@ -1,5 +1,5 @@
 import React, { useEffect, useState } from 'react';
-import { PageHeader, Space, Button, Table } from 'antd';
+import { PageHeader, Space, Button, Table, DatePicker } from 'antd';
 import axios from 'axios';
 import moment from 'moment-timezone';
 
@@ -15,9 +15,12 @@ function PatientProfile(props) {
   const [patientData, setPatientData] = useState();
   const [patientError, setPatientError] = useState();
   const [restraintsSubmissions, setRestraintsSubmissions] = useState();
+  const [restraintsDatePicker, setRestraintsDatePicker] = useState([
+    moment().add(-5, 'days').startOf('day'),
+    moment().endOf('day'),
+  ]);
   const [progressRecordSubmissions, setProgressRecordSubmissions] = useState();
-
-  // Or use javascript directly:
+  const { RangePicker } = DatePicker;
 
   let { bedNo } = useParams();
   const token = getToken();
@@ -56,7 +59,10 @@ function PatientProfile(props) {
       axios
         .post(
           `${process.env.REACT_APP_API_URL}/forms/restraintsForm/submissionHistory`,
-          { uuid: patientData.uuid },
+          {
+            uuid: patientData.uuid,
+            restraintsDatePicker: restraintsDatePicker,
+          },
           { headers: { token: token } }
         )
         .then((response) => {
@@ -73,7 +79,10 @@ function PatientProfile(props) {
       axios
         .post(
           `${process.env.REACT_APP_API_URL}/forms/progressRecordForm/submissionHistory`,
-          { uuid: patientData.uuid },
+          {
+            uuid: patientData.uuid,
+            restraintsDatePicker: restraintsDatePicker,
+          },
           { headers: { token: token } }
         )
         .then((response) => {
@@ -88,7 +97,7 @@ function PatientProfile(props) {
           console.log(error);
         });
     }
-  }, [patientData]);
+  }, [patientData, restraintsDatePicker]);
 
   function handleClickRestraints() {
     props.history.push('/forms/restraints_form/' + patientData.uuid, '_self');
@@ -147,6 +156,21 @@ function PatientProfile(props) {
 
               <br></br>
               <br></br>
+              <Space direction="vertical" size={12}>
+                <span>Select Date for Reports below</span>
+                <RangePicker
+                  defaultValue={[
+                    moment().add(-5, 'days').startOf('day'),
+                    moment().startOf('day'),
+                  ]}
+                  onChange={(e) => {
+                    let endDate = e[1];
+                    endDate = moment(endDate).endOf('day');
+                    console.log(moment(endDate).format());
+                    setRestraintsDatePicker([e[0], endDate]);
+                  }}
+                />
+              </Space>
               <h3>Restraints Form submission history</h3>
               <Button
                 style={{ margin: '10px' }}
@@ -155,6 +179,7 @@ function PatientProfile(props) {
               >
                 Export Restraints Data
               </Button>
+
               <Table
                 columns={restraintsColumns}
                 dataSource={restraintsSubmissions}

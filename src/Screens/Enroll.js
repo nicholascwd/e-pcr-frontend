@@ -21,15 +21,6 @@ function Enroll(props) {
       //console.log(window.location.pathname)
       return;
     }
-
-    axios
-      .get('https://go.lentorresidence.com/KEY6DS89AD8GB5S4F4GB6NH78SD7F5B4F')
-      .then((response) => {
-        console.log(response.data);
-      })
-      .catch((err) => {
-        console.log(err);
-      });
   }, []);
 
   // handle button click of login form

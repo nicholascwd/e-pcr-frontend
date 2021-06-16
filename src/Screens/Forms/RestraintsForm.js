@@ -10,7 +10,7 @@ import {
   Input,
   DatePicker,
 } from 'antd';
-
+import moment from 'moment-timezone';
 import axios from 'axios';
 import { getToken, getUser, removeUserSession } from '../../Utils/Common';
 import { useParams } from 'react-router';
@@ -119,7 +119,10 @@ function RestraintsForm(props) {
                 <br></br>
                 NRIC: {decryptField(patientData.NRIC)}
                 <br></br>
-                Profile Creation: {patientData.creationDate}
+                Profile Creation:{' '}
+                {moment(patientData.creationDate).format(
+                  'MMMM Do YYYY, h:mm:ss a'
+                )}
                 <br></br>
                 Status: {patientData.status}
               </h3>
@@ -155,6 +158,7 @@ function RestraintsForm(props) {
                   <Radio.Group>
                     <Radio value="Y">Yes</Radio>
                     <Radio value="N">No</Radio>
+                    <Radio value="">NA</Radio>
                   </Radio.Group>
                 </Form.Item>
                 <Form.Item
@@ -164,6 +168,7 @@ function RestraintsForm(props) {
                   <Radio.Group>
                     <Radio value="Y">Yes</Radio>
                     <Radio value="N">No</Radio>
+                    <Radio value="">NA</Radio>
                   </Radio.Group>
                 </Form.Item>
                 <Form.Item
@@ -173,6 +178,7 @@ function RestraintsForm(props) {
                   <Radio.Group>
                     <Radio value="Y">Yes</Radio>
                     <Radio value="N">No</Radio>
+                    <Radio value="">NA</Radio>
                   </Radio.Group>
                 </Form.Item>
                 <Form.Item
@@ -182,12 +188,14 @@ function RestraintsForm(props) {
                   <Radio.Group>
                     <Radio value="Y">Yes</Radio>
                     <Radio value="N">No</Radio>
+                    <Radio value="">NA</Radio>
                   </Radio.Group>
                 </Form.Item>
                 <Form.Item name="r5" label="Skin integrity checked">
                   <Radio.Group>
                     <Radio value="Y">Yes</Radio>
                     <Radio value="N">No</Radio>
+                    <Radio value="">NA</Radio>
                   </Radio.Group>
                 </Form.Item>
 
