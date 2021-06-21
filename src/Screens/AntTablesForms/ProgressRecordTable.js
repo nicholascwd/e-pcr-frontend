@@ -33,7 +33,7 @@ export const progressRecordColumns = [
     render: (text) => <p>{JSON.parse(text).p3}</p>,
   },
   {
-    title: 'Hygiene/Bathing',
+    title: 'Hygiene/ Bathing',
     key: '_id',
     dataIndex: 'formVals',
     render: (text) => <p>{JSON.parse(text).p4}</p>,
