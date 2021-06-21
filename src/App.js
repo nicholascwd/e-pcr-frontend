@@ -1,6 +1,7 @@
 import React, { useState, useEffect } from 'react';
 import { Switch, useHistory } from 'react-router-dom';
 import { Layout, Menu, Row, Alert, Col, Avatar } from 'antd';
+import 'react-bootstrap-table-next/dist/react-bootstrap-table2.min.css';
 import {
   FileTextOutlined,
   SettingOutlined,
@@ -24,6 +25,8 @@ import ProgressRecordForm from './Screens/Forms/ProgressRecordForm';
 import Enroll from './Screens/Enroll';
 import UsersModule from './Screens/UsersModule';
 import AddUser from './Screens/UsersModule/AddUser';
+import ResetPassword from './Screens/UsersModule/PasswordReset';
+import 'react-bootstrap-table-next/dist/react-bootstrap-table2.min.css';
 
 function App() {
   const [authLoading, setAuthLoading] = useState(true);
@@ -205,10 +208,15 @@ function App() {
                     path={['/users_module/addUser', '/']}
                     component={AddUser}
                   />
+                  <PrivateRoute
+                    exact
+                    path={['/users_module/reset_password/:username', '/']}
+                    component={ResetPassword}
+                  />
                 </Switch>
               </div>
             </Content>
-            <Footer>ePCR Demo</Footer>
+            <Footer>ePCR</Footer>
           </Layout>
         </Layout>
       </Layout>

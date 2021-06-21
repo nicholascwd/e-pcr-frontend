@@ -6,10 +6,43 @@
   top: -42px !important;
 }
 
-.ant-table.ant-table-rtl {
+/* .ant-table.ant-table-rtl {
   overflow-x: scroll;
 }
 
 .ant-table {
   font-size: 7px !important;
+} */
+
+/* .react-bootstrap-table {
+  overflow-x: scroll !important;
+} */
+/* td {
+  word-break: break-word;
+} */
+
+/* .react-bootstrap-table table {
+  table-layout: auto !important;
+} */
+/* .table {
+  overflow: auto;
+  display: block;
+  table-layout: auto;
+} */
+
+/* .react-bootstrap-table {
+  width: 80%;
+  height: 50vh;
+  overflow: auto;
+} */
+
+/* .overflowTable {
+  overflow-x: auto;
+  box-sizing: inherit;
+} */
+
+.pcf > table,
+.rc-table-row,
+.rc-table-cell {
+  border: 1px solid black;
 }

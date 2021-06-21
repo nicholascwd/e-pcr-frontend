@@ -1,14 +1,14 @@
-import React, { useState } from "react";
-import axios from "axios";
-import { Button, Table, Tag, Space, Input, Alert } from "antd";
-import { UserOutlined, KeyOutlined, HomeOutlined } from "@ant-design/icons";
-import { setAESKeyInSession, setUserSession } from "../Utils/Common";
-import { useEffect } from "react";
+import React, { useState } from 'react';
+import axios from 'axios';
+import { Button, Table, Tag, Space, Input, Alert } from 'antd';
+import { UserOutlined, KeyOutlined, HomeOutlined } from '@ant-design/icons';
+import { setAESKeyInSession, setUserSession } from '../Utils/Common';
+import { useEffect } from 'react';
 
 function Login(props) {
   const [loading, setLoading] = useState(false);
-  const username = useFormInput("");
-  const password = useFormInput("");
+  const username = useFormInput('');
+  const password = useFormInput('');
   const [error, setError] = useState(null);
 
   // handle button click of login form
@@ -24,37 +24,38 @@ function Login(props) {
         setLoading(false);
         setUserSession(response.data.token, response.data.user);
         setAESKeyInSession(response.data.key);
-        window.open("/select_patient", "_self");
+        window.open('/select_patient', '_self');
       })
       .catch((error) => {
         setLoading(false);
         if (error.reponse && error.response.status === 401)
           setError(error.response.data.message);
-        else setError("Something went wrong. Please try again later.");
+        else setError('Something went wrong. Please try again later.');
       });
   };
 
   return (
     <div
       style={{
-        position: "absolute",
-        top: "50%",
-        left: "50%",
-        transform: "translate(-50%, -50%)",
+        position: 'absolute',
+        top: '50%',
+        left: '50%',
+        transform: 'translate(-50%, -50%)',
       }}
     >
-      <Space direction="vertical" size="middle" style={{ width: "400px" }}>
+      <Space direction="vertical" size="middle" style={{ width: '400px' }}>
         {error ? (
           <Alert
             message="Login Failed"
             description={error}
             type="error"
             showIcon
-            style={{ textAlign: "left" }}
+            style={{ textAlign: 'left' }}
           />
         ) : (
           <></>
         )}
+
         <Input
           {...username}
           size="large"
@@ -73,9 +74,9 @@ function Login(props) {
           shape="round"
           onClick={handleLogin}
           loading={loading}
-          style={{ width: "100%" }}
+          style={{ width: '100%' }}
         >
-          {loading ? "Logging In..." : "Login"}
+          {loading ? 'Logging In...' : 'Login'}
         </Button>
       </Space>
     </div>

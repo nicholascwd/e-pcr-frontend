@@ -3,16 +3,9 @@ import { PageHeader } from 'antd';
 import { Typography, Table, Space, Button, Input } from 'antd';
 import axios from 'axios';
 import moment from 'moment-timezone';
-import {
-  getToken,
-  getUser,
-  removeUserSession,
-  setUserSession,
-} from '../../Utils/Common';
-import { decryptField } from '../../Utils/EncryptContents';
+import { getToken, removeUserSession } from '../../Utils/Common';
 
 function UsersModule(props) {
-  const { Text, Link } = Typography;
   const [userData, setUserData] = useState();
 
   useEffect(() => {
@@ -36,8 +29,6 @@ function UsersModule(props) {
         { headers: { token: token } }
       )
       .then((response) => {
-        console.log(response);
-        //console.log(response.data)
         setUserData(response.data);
       })
       .catch((error) => {
@@ -79,7 +70,9 @@ function UsersModule(props) {
         <Space size="middle">
           <a
             onClick={() => {
-              props.history.push('');
+              props.history.push(
+                '/users_module/reset_password/' + data.username
+              );
             }}
           >
             Reset Password
@@ -101,7 +94,6 @@ function UsersModule(props) {
           >
             Add new Staff
           </Button>
-          {/* <Text>Input Patient Bed</Text> */}
           <h3>Registed Staff List</h3>
           <Table columns={columns} dataSource={userData} onChange={onChange} />
         </Space>

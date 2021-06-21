@@ -1,5 +1,10 @@
 import React, { useEffect, useState } from 'react';
 import { PageHeader, Space, Button, Table, DatePicker } from 'antd';
+// import 'react-bootstrap-table-next/dist/react-bootstrap-table2.min.css';
+import BootstrapTable from 'react-bootstrap-table-next';
+import paginationFactory from 'react-bootstrap-table2-paginator';
+import RCTable from 'rc-table';
+
 import axios from 'axios';
 import moment from 'moment-timezone';
 
@@ -10,13 +15,14 @@ import { restraintsPdfExport } from './PDFExport/RestraintsExport';
 import { restraintsColumns } from './AntTablesForms/RestraintsTable';
 import { progressRecordColumns } from './AntTablesForms/ProgressRecordTable';
 import { progressRecordPdfExport } from './PDFExport/ProgressRecordExport';
+import '../Assets/index.less';
 
 function PatientProfile(props) {
   const [patientData, setPatientData] = useState();
   const [patientError, setPatientError] = useState();
   const [restraintsSubmissions, setRestraintsSubmissions] = useState();
   const [restraintsDatePicker, setRestraintsDatePicker] = useState([
-    moment().add(-5, 'days').startOf('day'),
+    moment().add(-2, 'days').startOf('day'),
     moment().endOf('day'),
   ]);
   const [progressRecordSubmissions, setProgressRecordSubmissions] = useState();
@@ -49,7 +55,7 @@ function PatientProfile(props) {
       })
       .catch((error) => {
         console.log(error);
-        setPatientError(error.response.data.error);
+        // setPatientError(error.response.data.error);
       });
   }, []);
 
@@ -71,6 +77,7 @@ function PatientProfile(props) {
             el.formVals = decryptObject(el.formData);
           });
           setRestraintsSubmissions(formDataPros);
+          console.log(formDataPros);
         })
         .catch((error) => {
           console.log(error);
@@ -98,6 +105,10 @@ function PatientProfile(props) {
         });
     }
   }, [patientData, restraintsDatePicker]);
+
+  const mql = window.matchMedia('(max-width: 600px)');
+
+  let mobileView = mql.matches;
 
   function handleClickRestraints() {
     props.history.push('/forms/restraints_form/' + patientData.uuid, '_self');
@@ -131,7 +142,7 @@ function PatientProfile(props) {
         <Space direction="vertical" size="middle">
           {patientData && (
             <>
-              <h3>
+              <h4>
                 Bed: {patientData.bed}
                 <br></br>
                 Name: {decryptField(patientData.name)}
@@ -144,7 +155,7 @@ function PatientProfile(props) {
                 )}
                 <br></br>
                 Status: {patientData.status}
-              </h3>
+              </h4>
               <p>Identifier: {patientData.uuid}</p>
 
               <Button type="primary" onClick={handleClickRestraints}>
@@ -160,7 +171,7 @@ function PatientProfile(props) {
                 <span>Select Date for Reports below</span>
                 <RangePicker
                   defaultValue={[
-                    moment().add(-5, 'days').startOf('day'),
+                    moment().add(-2, 'days').startOf('day'),
                     moment().startOf('day'),
                   ]}
                   onChange={(e) => {
@@ -180,12 +191,35 @@ function PatientProfile(props) {
                 Export Restraints Data
               </Button>
 
-              <Table
-                columns={restraintsColumns}
-                dataSource={restraintsSubmissions}
-                className="preview-batch-table"
-                scroll={{ x: 'max-content' }}
-              />
+              <div className="pcf">
+                <RCTable
+                  style={{ width: mobileView ? 400 : 1500 }}
+                  scroll={{ x: 300 }}
+                  columns={restraintsColumns}
+                  className="table"
+                  data={restraintsSubmissions}
+                />
+              </div>
+              {/* <div className="overflowTable">
+                <Table
+                  columns={restraintsColumns}
+                  dataSource={restraintsSubmissions}
+                  className="preview-batch-table"
+                  scroll={{ x: 'max-content' }}
+                />
+              </div> */}
+
+              {/* {restraintsSubmissions && (
+                <div className="overflowTable">
+                  <BootstrapTable
+                    pagination={paginationFactory()}
+                    wrapperClasses="table-responsive"
+                    keyField="id"
+                    data={restraintsSubmissions}
+                    columns={restraintsColumns}
+                  />
+                </div>
+              )} */}
 
               <h3>Progress Record Form submission history</h3>
               <Button
@@ -195,12 +229,36 @@ function PatientProfile(props) {
               >
                 Export Progress Record Data
               </Button>
-              <Table
-                columns={progressRecordColumns}
-                dataSource={progressRecordSubmissions}
-                scroll={{ x: 'max-content' }}
-                className="preview-batch-table"
-              />
+
+              <div className="pcf">
+                <RCTable
+                  style={{ width: mobileView ? 400 : 1500 }}
+                  scroll={{ x: 300 }}
+                  columns={progressRecordColumns}
+                  data={progressRecordSubmissions}
+                  className="table"
+                />
+              </div>
+              {/* <div className="overflowTable">
+                <Table
+                  columns={progressRecordColumns}
+                  dataSource={progressRecordSubmissions}
+                  // scroll={{ x: 'max-content' }}
+                  scroll={{ x: true }}
+                  className="preview-batch-table"
+                />
+              </div> */}
+              {/* {progressRecordSubmissions && (
+                <div className="overflowTable">
+                  <BootstrapTable
+                    pagination={paginationFactory()}
+                    wrapperClasses="table-responsive"
+                    keyField="id"
+                    data={progressRecordSubmissions}
+                    columns={progressRecordColumns}
+                  />
+                </div>
+              )} */}
             </>
           )}
 

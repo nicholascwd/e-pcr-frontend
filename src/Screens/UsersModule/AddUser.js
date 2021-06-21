@@ -1,22 +1,38 @@
 import React, { useEffect, useState } from 'react';
 import { PageHeader, Form, Select } from 'antd';
-import { Typography, Table, Space, Button, Input, Result, Alert } from 'antd';
+import { Space, Button, Input, Result, Alert } from 'antd';
 import axios from 'axios';
-import moment from 'moment-timezone';
-import {
-  getToken,
-  getUser,
-  removeUserSession,
-  setUserSession,
-} from '../../Utils/Common';
-import { encryptField } from '../../Utils/EncryptContents';
+var owasp = require('owasp-password-strength-test');
+import { getToken, removeUserSession } from '../../Utils/Common';
+
+owasp.config({
+  allowPassphrases: false,
+  maxLength: 128,
+  minLength: 10,
+  minPhraseLength: 20,
+  minOptionalTestsToPass: 7,
+});
 
 function AddUser(props) {
   const token = getToken();
-
-  const { Text, Link } = Typography;
   const [submitted, setSubmitted] = useState(false);
   const [admitError, setAdmitError] = useState();
+  const [passwordSecurity, setPasswordSecurity] = useState();
+
+  const useFormInput = (initialValue) => {
+    const [value, setValue] = useState(initialValue);
+
+    const handleChange = (e) => {
+      setValue(e.target.value);
+      let result = owasp.test(e.target.value);
+      setPasswordSecurity(result.requiredTestErrors);
+    };
+    return {
+      value,
+      onChange: handleChange,
+    };
+  };
+  const password = useFormInput('');
   const formItemLayout = {
     labelCol: {
       span: 30,
@@ -28,7 +44,6 @@ function AddUser(props) {
   };
 
   useEffect(() => {
-    const token = getToken();
     if (!token) {
       props.history.push('/login');
       return;
@@ -46,7 +61,13 @@ function AddUser(props) {
   }
 
   const onFinish = (values) => {
-    console.log('Received values of form: ', values);
+    console.log(passwordSecurity);
+    console.log(passwordSecurity.length);
+    if (passwordSecurity.length !== 0) {
+      alert('Password complexity requirements not met');
+      return;
+    }
+
     //submit restraints form
     axios
       .post(
@@ -62,12 +83,10 @@ function AddUser(props) {
       .then((response) => {
         setSubmitted(true);
         setAdmitError(null);
-        //console.log(response.data[0])
       })
       .catch((error) => {
         console.log(error.response.data.message);
         setAdmitError(error.response.data.message);
-        //   setPatientError(error.response.data.error)
       });
   };
 
@@ -101,14 +120,15 @@ function AddUser(props) {
                   <Input required />
                 </Form.Item>
                 <Form.Item name="password" label="Password" required>
-                  <Input required />
+                  <Input {...password} type="password" required />
                 </Form.Item>
+                <p>{passwordSecurity}</p>
                 <Form.Item name="email" label="Email Address" required>
-                  <Input required />
+                  <Input type="email" required />
                 </Form.Item>
                 <Form.Item
                   name="role"
-                  label="role"
+                  label="Role"
                   rules={[
                     {
                       required: true,
