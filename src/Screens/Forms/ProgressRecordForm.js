@@ -226,8 +226,9 @@ function ProgressRecordForm(props) {
                     <Radio value="">NA</Radio>
                   </Radio.Group>
                 </Form.Item>
+
                 <Form.Item name="p8" label="Bowel">
-                  <Radio.Group>
+                  {/* <Radio.Group>
                     <Radio value="Bowel Opened">Bowel Opened</Radio>
                     <Radio value="Bowel Not Opened">Bowel Not Opened</Radio>
                     <Radio value="Continent">Continent</Radio>
@@ -236,8 +237,21 @@ function ProgressRecordForm(props) {
                     </Radio>
                     <Radio value="Colostomy Care">Colostomy Care</Radio>
                     <Radio value="">NA</Radio>
-                  </Radio.Group>
+                  </Radio.Group> */}
+
+                  <Checkbox.Group>
+                    <Checkbox value="Bowel Opened ">Bowel Opened</Checkbox>
+                    <Checkbox value="Bowel Not Opened">
+                      Bowel Not Opened
+                    </Checkbox>
+                    <Checkbox value="Continent ">Continent</Checkbox>
+                    <Checkbox value="Incontinent (Diaper) ">
+                      Incontinent (Diaper)
+                    </Checkbox>
+                    <Checkbox value="Colostomy Care ">Colostomy Care</Checkbox>
+                  </Checkbox.Group>
                 </Form.Item>
+
                 <Form.Item name="p9" label="Mobility">
                   <Checkbox.Group>
                     <Checkbox value="Ambulant">Ambulant</Checkbox>
