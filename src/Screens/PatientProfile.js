@@ -193,7 +193,7 @@ function PatientProfile(props) {
 
               <div className="pcf">
                 <RCTable
-                  style={{ width: mobileView ? 400 : 1500 }}
+                  style={{ width: mobileView ? 400 : 1100 }}
                   scroll={{ x: 300 }}
                   columns={restraintsColumns}
                   className="table"
@@ -232,7 +232,7 @@ function PatientProfile(props) {
 
               <div className="pcf">
                 <RCTable
-                  style={{ width: mobileView ? 400 : 1500 }}
+                  style={{ width: mobileView ? 400 : 1100 }}
                   scroll={{ x: 300 }}
                   columns={progressRecordColumns}
                   data={progressRecordSubmissions}
