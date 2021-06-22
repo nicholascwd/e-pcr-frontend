@@ -30,19 +30,25 @@ export const restraintsColumns = [
     render: (text) => <p>{JSON.parse(text).r2}</p>,
   },
   {
-    title: 'Adequate Circulation',
-    key: '_id',
-    dataIndex: 'formVals',
-    // width: 50,
-    render: (text) => <p>{JSON.parse(text).r3}</p>,
+    title: 'Restrained Limbs',
+    children: [
+      {
+        title: 'Adequate Circulation',
+        key: '_id',
+        dataIndex: 'formVals',
+        // width: 50,
+        render: (text) => <p>{JSON.parse(text).r3}</p>,
+      },
+      {
+        title: 'Adequate ROM',
+        key: '_id',
+        dataIndex: 'formVals',
+        // width: 50,
+        render: (text) => <p>{JSON.parse(text).r4}</p>,
+      },
+    ],
   },
-  {
-    title: 'Adequate ROM',
-    key: '_id',
-    dataIndex: 'formVals',
-    // width: 50,
-    render: (text) => <p>{JSON.parse(text).r4}</p>,
-  },
+
   {
     title: 'Skin Integrity Checked',
     key: '_id',

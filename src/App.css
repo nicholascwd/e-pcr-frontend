@@ -44,5 +44,13 @@
 .pcf > table,
 .rc-table-row,
 .rc-table-cell {
-  border: 1px solid black;
+  border: 1px solid rgb(142, 142, 142);
+}
+
+.rc-table-cell {
+  text-align: center;
+  padding: 3px;
+}
+tr:nth-child(even) {
+  background-color: #fff;
 }

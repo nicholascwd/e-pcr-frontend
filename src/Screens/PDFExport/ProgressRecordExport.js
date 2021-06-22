@@ -40,6 +40,7 @@ export const progressRecordPdfExport = (
   }
 
   doc.autoTable({
+    theme: 'grid',
     startY: 50,
     styles: { fontSize: 7 },
     head: [

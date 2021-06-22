@@ -32,6 +32,7 @@ export const restraintsPdfExport = (patientData, restraintsSubmissions) => {
   }
 
   doc.autoTable({
+    theme: 'grid',
     startY: 50,
     head: [
       [
@@ -39,8 +40,8 @@ export const restraintsPdfExport = (patientData, restraintsSubmissions) => {
         'Time',
         'Restraints Applied Correctly',
         'Body & Limbs in Comfortable Position',
-        'Adequate Circulation',
-        'Adequate ROM',
+        'Adequate Circulation (Restrained Limbs)',
+        'Adequate ROM (Restrained Limbs)',
         'Skin Integrity Checked',
         'Restraints Type',
         'Remarks',
