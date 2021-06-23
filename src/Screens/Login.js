@@ -1,9 +1,8 @@
 import React, { useState } from 'react';
 import axios from 'axios';
-import { Button, Table, Tag, Space, Input, Alert } from 'antd';
-import { UserOutlined, KeyOutlined, HomeOutlined } from '@ant-design/icons';
+import { Button, Space, Input, Alert } from 'antd';
+import { UserOutlined, KeyOutlined } from '@ant-design/icons';
 import { setAESKeyInSession, setUserSession } from '../Utils/Common';
-import { useEffect } from 'react';
 
 function Login(props) {
   const [loading, setLoading] = useState(false);
@@ -26,10 +25,10 @@ function Login(props) {
         setAESKeyInSession(response.data.key);
         window.open('/select_patient', '_self');
       })
-      .catch((error) => {
+      .catch((err) => {
         setLoading(false);
-        if (error.reponse && error.response.status === 401)
-          setError(error.response.data.message);
+        if (err.reponse && err.response.status === 401)
+          setError(err.response.data.message);
         else setError('Something went wrong. Please try again later.');
       });
   };

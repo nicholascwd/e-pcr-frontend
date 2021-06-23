@@ -31,9 +31,19 @@ function SelectPatient(props) {
         let beds = response.data;
         beds.map((el) => {
           el.value = el.bed;
-          // delete el.bed
+          el.numeric = parseInt(el.bed.slice(0, -1));
         });
-        console.log(beds);
+        function compare(a, b) {
+          if (a.numeric < b.numeric) {
+            return -1;
+          }
+          if (a.numeric > b.numeric) {
+            return 1;
+          }
+          return 0;
+        }
+        beds.sort(compare);
+
         setOptions(beds);
         //console.log(response.data)
       })
@@ -48,7 +58,7 @@ function SelectPatient(props) {
 
   function handleSubmit() {
     // move to this once implemented api versioning props.history.push('/patient_profile/' + selected, '_self');
-    window.open('/patient_profile/' + selected, '_self');
+    window.open(`/patient_profile/${selected}`, '_self');
   }
 
   return (

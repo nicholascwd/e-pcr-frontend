@@ -6,7 +6,7 @@ import { getToken } from '../Utils/Common';
 
 function Enroll(props) {
   const [loading, setLoading] = useState(false);
-  const username = useFormInput('');
+  const passphrase = useFormInput('');
   const [error, setError] = useState(null);
 
   useEffect(() => {
@@ -16,19 +16,16 @@ function Enroll(props) {
       window.location.pathname !== '/login' &&
       window.location.pathname !== '/enroll'
     ) {
-      // history.push("/login")
       window.open('/login', '_self');
-      //console.log(window.location.pathname)
       return;
     }
   }, []);
 
-  // handle button click of login form
   const handleEnroll = () => {
     setError(null);
     setLoading(true);
     axios
-      .get('https://go.lentorresidence.com/' + username.value, {
+      .get(`${process.env.REACT_APP_KMS_URL}/${passphrase.value}`, {
         timeout: 1000,
       })
       .then((response) => {
@@ -68,7 +65,7 @@ function Enroll(props) {
         <h4>Enrollment Secret</h4>
         <p>Contact admin to assist with keying in enrollment secret</p>
         <Input
-          {...username}
+          {...passphrase}
           size="large"
           placeholder="Enrollment Secret"
           type="password"

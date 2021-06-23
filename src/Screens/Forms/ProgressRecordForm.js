@@ -9,14 +9,13 @@ import {
   Space,
   Input,
   DatePicker,
-  Col,
   Checkbox,
 } from 'antd';
-import moment from 'moment-timezone';
 import axios from 'axios';
 import { getToken, getUser, removeUserSession } from '../../Utils/Common';
 import { useParams } from 'react-router';
-import { decryptField, encryptObject } from '../../Utils/EncryptContents';
+import { encryptObject } from '../../Utils/EncryptContents';
+import PatientCard from '../ResidentsModule/PatientCard';
 
 const { Option } = Select;
 const formItemLayout = {
@@ -53,7 +52,7 @@ function ProgressRecordForm(props) {
         removeUserSession();
       });
 
-    //obtain resident details based on bed from url params
+    //obtain resident details based on uuid from url params
     axios
       .post(
         `${process.env.REACT_APP_API_URL}/residents/getByUUID`,
@@ -116,22 +115,7 @@ function ProgressRecordForm(props) {
         <Space direction="vertical" size="middle">
           {patientData && staff && !submitted && (
             <>
-              <h3>
-                Bed: {patientData.bed}
-                <br></br>
-                Name: {decryptField(patientData.name)}
-                <br></br>
-                NRIC: {decryptField(patientData.NRIC)}
-                <br></br>
-                Profile Creation:{' '}
-                {moment(patientData.creationDate).format(
-                  'MMMM Do YYYY, h:mm:ss a'
-                )}
-                <br></br>
-                Status: {patientData.status}
-              </h3>
-              <p>Identifier: {patientData.uuid}</p>
-
+              <PatientCard patientData={patientData} />
               <Form
                 name="validate_other"
                 {...formItemLayout}

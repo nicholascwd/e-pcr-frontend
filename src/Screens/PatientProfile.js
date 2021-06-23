@@ -1,8 +1,5 @@
 import React, { useEffect, useState } from 'react';
-import { PageHeader, Space, Button, Table, DatePicker } from 'antd';
-// import 'react-bootstrap-table-next/dist/react-bootstrap-table2.min.css';
-import BootstrapTable from 'react-bootstrap-table-next';
-import paginationFactory from 'react-bootstrap-table2-paginator';
+import { PageHeader, Space, Button, DatePicker } from 'antd';
 import RCTable from 'rc-table';
 
 import axios from 'axios';
@@ -10,11 +7,12 @@ import moment from 'moment-timezone';
 
 import { getToken, removeUserSession } from '../Utils/Common';
 import { useParams } from 'react-router';
-import { decryptField, decryptObject } from '../Utils/EncryptContents';
+import { decryptObject } from '../Utils/EncryptContents';
 import { restraintsPdfExport } from './PDFExport/RestraintsExport';
 import { restraintsColumns } from './AntTablesForms/RestraintsTable';
 import { progressRecordColumns } from './AntTablesForms/ProgressRecordTable';
 import { progressRecordPdfExport } from './PDFExport/ProgressRecordExport';
+import PatientCard from './ResidentsModule/PatientCard';
 import '../Assets/index.less';
 
 function PatientProfile(props) {
@@ -55,7 +53,7 @@ function PatientProfile(props) {
       })
       .catch((error) => {
         console.log(error);
-        // setPatientError(error.response.data.error);
+        setPatientError(error.response.data.error);
       });
   }, []);
 
@@ -107,22 +105,18 @@ function PatientProfile(props) {
   }, [patientData, restraintsDatePicker]);
 
   const mql = window.matchMedia('(max-width: 600px)');
-
   let mobileView = mql.matches;
 
   function handleClickRestraints() {
-    props.history.push('/forms/restraints_form/' + patientData.uuid, '_self');
+    props.history.push(`/forms/restraints_form/${patientData.uuid}`);
   }
 
   function handleClickProgressRecord() {
-    props.history.push(
-      '/forms/progress_record_form/' + patientData.uuid,
-      '_self'
-    );
+    props.history.push(`/forms/progress_record_form/${patientData.uuid}`);
   }
 
   function handleBack() {
-    props.history.push('/select_patient', '_self');
+    props.history.push('/select_patient');
   }
   function generateRestraintsPDF() {
     restraintsPdfExport(patientData, restraintsSubmissions);
@@ -142,21 +136,7 @@ function PatientProfile(props) {
         <Space direction="vertical" size="middle">
           {patientData && (
             <>
-              <h4>
-                Bed: {patientData.bed}
-                <br></br>
-                Name: {decryptField(patientData.name)}
-                <br></br>
-                NRIC: {decryptField(patientData.NRIC)}
-                <br></br>
-                Profile Creation:{' '}
-                {moment(patientData.creationDate).format(
-                  'MMMM Do YYYY, h:mm:ss a'
-                )}
-                <br></br>
-                Status: {patientData.status}
-              </h4>
-              <p>Identifier: {patientData.uuid}</p>
+              <PatientCard patientData={patientData} />
 
               <Button type="primary" onClick={handleClickRestraints}>
                 Submit Restraints Form
@@ -200,26 +180,6 @@ function PatientProfile(props) {
                   data={restraintsSubmissions}
                 />
               </div>
-              {/* <div className="overflowTable">
-                <Table
-                  columns={restraintsColumns}
-                  dataSource={restraintsSubmissions}
-                  className="preview-batch-table"
-                  scroll={{ x: 'max-content' }}
-                />
-              </div> */}
-
-              {/* {restraintsSubmissions && (
-                <div className="overflowTable">
-                  <BootstrapTable
-                    pagination={paginationFactory()}
-                    wrapperClasses="table-responsive"
-                    keyField="id"
-                    data={restraintsSubmissions}
-                    columns={restraintsColumns}
-                  />
-                </div>
-              )} */}
 
               <h3>Progress Record Form submission history</h3>
               <Button
@@ -239,26 +199,6 @@ function PatientProfile(props) {
                   className="table"
                 />
               </div>
-              {/* <div className="overflowTable">
-                <Table
-                  columns={progressRecordColumns}
-                  dataSource={progressRecordSubmissions}
-                  // scroll={{ x: 'max-content' }}
-                  scroll={{ x: true }}
-                  className="preview-batch-table"
-                />
-              </div> */}
-              {/* {progressRecordSubmissions && (
-                <div className="overflowTable">
-                  <BootstrapTable
-                    pagination={paginationFactory()}
-                    wrapperClasses="table-responsive"
-                    keyField="id"
-                    data={progressRecordSubmissions}
-                    columns={progressRecordColumns}
-                  />
-                </div>
-              )} */}
             </>
           )}
 
