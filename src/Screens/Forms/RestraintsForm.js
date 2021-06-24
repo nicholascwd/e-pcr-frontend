@@ -79,6 +79,7 @@ function RestraintsForm(props) {
           formData: encryptObject(values),
           bed: patientData.bed,
           dateTime: dateTime,
+          timeslot: values.time,
         },
         { headers: { token: token } }
       )

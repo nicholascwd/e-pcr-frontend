@@ -81,6 +81,7 @@ function ProgressRecordForm(props) {
           resident: uuid,
           formData: encryptObject(values),
           dateTime: dateTime,
+          timeslot: values.time,
           bed: patientData.bed,
         },
         { headers: { token: token } }
