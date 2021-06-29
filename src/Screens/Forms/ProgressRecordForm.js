@@ -12,6 +12,7 @@ import {
   Checkbox,
 } from 'antd';
 import axios from 'axios';
+import moment from 'moment-timezone';
 import { getToken, getUser, removeUserSession } from '../../Utils/Common';
 import { useParams } from 'react-router';
 import { encryptObject } from '../../Utils/EncryptContents';
@@ -70,7 +71,11 @@ function ProgressRecordForm(props) {
   }, []);
 
   const onFinish = (values) => {
-    const dateTime = values['date'];
+    if (!values.time) {
+      alert('Time is missing');
+      return;
+    }
+    const dateTime = moment(values['date']).startOf('day');
     values['date'] = values['date'].format('YYYY-MM-DD');
     console.log('Received values of form: ', values);
     //submit restraints form
@@ -213,17 +218,6 @@ function ProgressRecordForm(props) {
                 </Form.Item>
 
                 <Form.Item name="p8" label="Bowel">
-                  {/* <Radio.Group>
-                    <Radio value="Bowel Opened">Bowel Opened</Radio>
-                    <Radio value="Bowel Not Opened">Bowel Not Opened</Radio>
-                    <Radio value="Continent">Continent</Radio>
-                    <Radio value="Incontinent (Diaper)">
-                      Incontinent (Diaper)
-                    </Radio>
-                    <Radio value="Colostomy Care">Colostomy Care</Radio>
-                    <Radio value="">NA</Radio>
-                  </Radio.Group> */}
-
                   <Checkbox.Group>
                     <Checkbox value="Bowel Opened ">Bowel Opened</Checkbox>
                     <Checkbox value="Bowel Not Opened">

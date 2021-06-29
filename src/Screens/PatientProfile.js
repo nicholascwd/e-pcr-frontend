@@ -1,5 +1,5 @@
 import React, { useEffect, useState } from 'react';
-import { PageHeader, Space, Button, DatePicker } from 'antd';
+import { PageHeader, Space, Button, DatePicker, Switch } from 'antd';
 import RCTable from 'rc-table';
 
 import axios from 'axios';
@@ -9,8 +9,8 @@ import { getToken, removeUserSession } from '../Utils/Common';
 import { useParams } from 'react-router';
 import { decryptObject } from '../Utils/EncryptContents';
 import { restraintsPdfExport } from './PDFExport/RestraintsExport';
-import { restraintsColumns } from './AntTablesForms/RestraintsTable';
-import { progressRecordColumns } from './AntTablesForms/ProgressRecordTable';
+import { restraintsColumns } from './FormColumns/RestraintsTable';
+import { progressRecordColumns } from './FormColumns/ProgressRecordTable';
 import { progressRecordPdfExport } from './PDFExport/ProgressRecordExport';
 import PatientCard from './ResidentsModule/PatientCard';
 import '../Assets/index.less';
@@ -124,6 +124,34 @@ function PatientProfile(props) {
   function generateProgressRecordPDF() {
     progressRecordPdfExport(patientData, progressRecordSubmissions);
   }
+  function restraintsStatusChange(checked) {
+    axios
+      .post(
+        `${process.env.REACT_APP_API_URL}/residents/setRestraintsMonitoringStatus`,
+        {
+          uuid: patientData.uuid,
+          monitor: checked,
+        },
+        { headers: { token: token } }
+      )
+      .catch((error) => {
+        console.log(error);
+      });
+  }
+  function progressRecordStatusChange(checked) {
+    axios
+      .post(
+        `${process.env.REACT_APP_API_URL}/residents/setProgressRecordMonitoringStatus`,
+        {
+          uuid: patientData.uuid,
+          monitor: checked,
+        },
+        { headers: { token: token } }
+      )
+      .catch((error) => {
+        console.log(error);
+      });
+  }
 
   return (
     <>
@@ -137,15 +165,25 @@ function PatientProfile(props) {
           {patientData && (
             <>
               <PatientCard patientData={patientData} />
-
+              <br></br>
               <Button type="primary" onClick={handleClickRestraints}>
                 Submit Restraints Form
               </Button>
               <Button type="primary" onClick={handleClickProgressRecord}>
                 Submit Progress Record Form
               </Button>
-
               <br></br>
+              <h4>Monitoring Toggle</h4>
+              <p>Restraints Monitoring:</p>
+              <Switch
+                defaultChecked={patientData.restraintsMonitoring}
+                onChange={restraintsStatusChange}
+              />
+              Progress Record Monitoring:
+              <Switch
+                defaultChecked={patientData.progressRecordMonitoring}
+                onChange={progressRecordStatusChange}
+              />
               <br></br>
               <Space direction="vertical" size={12}>
                 <span>Select Date for Reports below</span>
@@ -170,7 +208,6 @@ function PatientProfile(props) {
               >
                 Export Restraints Data
               </Button>
-
               <div className="pcf">
                 <RCTable
                   style={{ width: mobileView ? 400 : 1100 }}
@@ -180,7 +217,6 @@ function PatientProfile(props) {
                   data={restraintsSubmissions}
                 />
               </div>
-
               <h3>Progress Record Form submission history</h3>
               <Button
                 style={{ margin: '10px' }}
@@ -189,7 +225,6 @@ function PatientProfile(props) {
               >
                 Export Progress Record Data
               </Button>
-
               <div className="pcf">
                 <RCTable
                   style={{ width: mobileView ? 400 : 1100 }}

@@ -11,6 +11,7 @@ import {
   DatePicker,
 } from 'antd';
 import axios from 'axios';
+import moment from 'moment-timezone';
 import { getToken, getUser, removeUserSession } from '../../Utils/Common';
 import { useParams } from 'react-router';
 import { encryptObject } from '../../Utils/EncryptContents';
@@ -67,7 +68,11 @@ function RestraintsForm(props) {
   }, []);
 
   const onFinish = (values) => {
-    const dateTime = values['date'];
+    if (!values.time) {
+      alert('Time is missing');
+      return;
+    }
+    const dateTime = moment(values['date']).startOf('day');
     values['date'] = values['date'].format('YYYY-MM-DD');
     console.log('Received values of form: ', JSON.stringify(values));
     //submit restraints form

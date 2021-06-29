@@ -19,14 +19,14 @@ import SelectPatient from './Screens/SelectPatient';
 import Announcement from './Screens/Announcement';
 import PatientProfile from './Screens/PatientProfile';
 import RestraintsForm from './Screens/Forms/RestraintsForm';
-import ResidentsModuleMainList from './Screens/ResidentsModule/MainList';
+import ResidentsModuleMainList from './Screens/ResidentsModule/index';
 import AdmitResident from './Screens/ResidentsModule/AdmitPatient';
 import ProgressRecordForm from './Screens/Forms/ProgressRecordForm';
 import Enroll from './Screens/Enroll';
 import UsersModule from './Screens/UsersModule';
 import AddUser from './Screens/UsersModule/AddUser';
 import ResetPassword from './Screens/UsersModule/PasswordReset';
-import 'react-bootstrap-table-next/dist/react-bootstrap-table2.min.css';
+import CompletionStatusModule from './Screens/CompletionStatus';
 
 function App() {
   const [authLoading, setAuthLoading] = useState(true);
@@ -143,6 +143,13 @@ function App() {
                   >
                     Settings
                   </Menu.Item>
+                  <Menu.Item
+                    key="6"
+                    icon={<BellOutlined />}
+                    onClick={() => history.push('/completion_status')}
+                  >
+                    Completion Status
+                  </Menu.Item>
                 </Menu>
               </Sider>
             </>
@@ -212,6 +219,11 @@ function App() {
                     exact
                     path={['/users_module/reset_password/:username', '/']}
                     component={ResetPassword}
+                  />
+                  <PrivateRoute
+                    exact
+                    path={['/completion_status', '/']}
+                    component={CompletionStatusModule}
                   />
                 </Switch>
               </div>
