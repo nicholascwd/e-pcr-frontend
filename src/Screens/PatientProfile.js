@@ -57,6 +57,25 @@ function PatientProfile(props) {
       });
   }, []);
 
+  function compareTime(a, b) {
+    if (a.timeslot < b.timeslot) {
+      return 1;
+    }
+    if (a.timeslot > b.timeslot) {
+      return -1;
+    }
+    return 0;
+  }
+  function compareDate(a, b) {
+    if (a.dateTime < b.dateTime) {
+      return 1;
+    }
+    if (a.dateTime > b.dateTime) {
+      return -1;
+    }
+    return 0;
+  }
+
   useEffect(() => {
     //    //obtain resident restraint's form submission history
     if (patientData) {
@@ -70,12 +89,17 @@ function PatientProfile(props) {
           { headers: { token: token } }
         )
         .then((response) => {
-          var formDataPros = response.data;
+          let formDataPros = response.data;
           formDataPros.map((el) => {
             el.formVals = decryptObject(el.formData);
+            el.timeslot = parseInt(el.timeslot);
           });
+
+          formDataPros.sort(compareTime);
+          formDataPros.sort(compareDate);
+
           setRestraintsSubmissions(formDataPros);
-          console.log(formDataPros);
+          // console.log(formDataPros);
         })
         .catch((error) => {
           console.log(error);
@@ -91,12 +115,22 @@ function PatientProfile(props) {
           { headers: { token: token } }
         )
         .then((response) => {
-          var formDataPros2 = response.data;
+          let formDataPros2 = response.data;
           formDataPros2.map((el) => {
             el.formVals = decryptObject(el.formData);
           });
+
+          var preferredOrder = ['ND', 'AM', 'PM'];
+          formDataPros2.sort(compareDate);
+          formDataPros2.sort(function (a, b) {
+            return (
+              preferredOrder.indexOf(b.timeslot) -
+              preferredOrder.indexOf(a.timeslot)
+            );
+          });
+
           setProgressRecordSubmissions(formDataPros2);
-          // console.log(formDataPros2)
+          // console.log('prog', formDataPros2);
         })
         .catch((error) => {
           console.log(error);
@@ -195,7 +229,7 @@ function PatientProfile(props) {
                   onChange={(e) => {
                     let endDate = e[1];
                     endDate = moment(endDate).endOf('day');
-                    console.log(moment(endDate).format());
+                    // console.log(moment(endDate).format());
                     setRestraintsDatePicker([e[0], endDate]);
                   }}
                 />
