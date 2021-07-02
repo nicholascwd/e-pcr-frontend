@@ -1,6 +1,17 @@
 import React, { useEffect, useState } from 'react';
 import { PageHeader } from 'antd';
-import { Typography, Table, Space, Button, Popconfirm, message } from 'antd';
+import {
+  Typography,
+  Table,
+  Space,
+  Button,
+  Popconfirm,
+  message,
+  Modal,
+  Form,
+  Input,
+  Alert,
+} from 'antd';
 import axios from 'axios';
 import moment from 'moment-timezone';
 import {
@@ -15,6 +26,9 @@ function ResidentsModuleMainList(props) {
   const { Text, Link } = Typography;
   const [patientData, setPatientData] = useState();
   const [dischargedPatientData, setDischargedPatientData] = useState();
+  const [readmitBed, setReadmitBed] = useState();
+  const [readmitResident, setReadmitResident] = useState();
+  const [readmitError, setReadmitError] = useState();
 
   const token = getToken();
   useEffect(() => {
@@ -42,12 +56,24 @@ function ResidentsModuleMainList(props) {
       )
       .then((response) => {
         let beds = response.data;
-        console.log(beds);
+
         beds.map((el) => {
           el.name = decryptField(el.name);
           el.NRIC = decryptField(el.NRIC);
+          el.numeric = parseInt(el.bed);
         });
         //console.log(response.data)
+        function compare(a, b) {
+          if (a.numeric < b.numeric) {
+            return -1;
+          }
+          if (a.numeric > b.numeric) {
+            return 1;
+          }
+          return 0;
+        }
+        beds.sort(compare);
+
         setPatientData(beds);
       })
       .catch((error) => {
@@ -63,7 +89,7 @@ function ResidentsModuleMainList(props) {
       )
       .then((response) => {
         let beds = response.data;
-        console.log(beds);
+
         beds.map((el) => {
           el.name = decryptField(el.name);
           el.NRIC = decryptField(el.NRIC);
@@ -76,6 +102,36 @@ function ResidentsModuleMainList(props) {
       });
   }
 
+  const [isModalVisible, setIsModalVisible] = useState(false);
+  const showModal = (e) => {
+    setReadmitResident({ uuid: e.uuid, name: e.name });
+    setReadmitError(null);
+    setIsModalVisible(true);
+  };
+  const handleReadmitSubmit = () => {
+    axios
+      .post(
+        `${process.env.REACT_APP_API_URL}/residents/readmit`,
+        { uuid: readmitResident.uuid, bed: readmitBed },
+        { headers: { token: token } }
+      )
+      .then((response) => {
+        populateAdmittedResidents();
+        populateDischargedResidents();
+
+        setIsModalVisible(false);
+      })
+      .catch((error) => {
+        if (error.response.data.error) {
+          setReadmitError(error.response.data.error);
+        }
+      });
+  };
+
+  const handleCancel = () => {
+    setIsModalVisible(false);
+  };
+
   function discharge(uuid) {
     //populate list of admitted residents
     axios
@@ -86,14 +142,19 @@ function ResidentsModuleMainList(props) {
       )
       .then((response) => {
         populateAdmittedResidents();
+        populateDischargedResidents();
       })
       .catch((error) => {
-        console.log(error);
+        console.log(error.error);
       });
   }
 
   function onChange(sorter) {
-    console.log('params', sorter);
+    // console.log('params', sorter);
+  }
+
+  function handleReadmitNewBed(e) {
+    setReadmitBed(e.target.value);
   }
 
   const columns = [
@@ -156,11 +217,11 @@ function ResidentsModuleMainList(props) {
       key: '_id',
       dataIndex: 'NRIC',
     },
-    {
-      title: 'Bed',
-      key: '_id',
-      dataIndex: 'bed',
-    },
+    // {
+    //   title: 'Bed',
+    //   key: '_id',
+    //   dataIndex: 'bed',
+    // },
     {
       title: 'Initial admission',
       key: '_id',
@@ -175,20 +236,20 @@ function ResidentsModuleMainList(props) {
         <Space size="middle">
           <a
             onClick={() => {
-              props.history.push('/patient_profile/' + data.bed);
+              props.history.push('/patient_profile/' + data.uuid);
             }}
           >
             View Patient
           </a>
-          <Popconfirm
-            title="Feature in progress."
-            onConfirm={() => discharge(data.uuid)}
-            onCancel={''}
-            okText="Yes"
-            cancelText="No"
+
+          <Button
+            type="secondary"
+            onClick={() => {
+              showModal(data);
+            }}
           >
-            <a href="#">Readmit</a>
-          </Popconfirm>
+            Re-admit
+          </Button>
         </Space>
       ),
     },
@@ -214,16 +275,29 @@ function ResidentsModuleMainList(props) {
             onChange={onChange}
           />
           <br></br>
-          <h3>
-            Table of Discharged Patients (Re-admission function not implemented
-            yet)
-          </h3>
+          <h3>Table of Discharged Patients</h3>
           <Table
             columns={columnsDischarged}
             dataSource={dischargedPatientData}
             onChange={onChange}
           />
         </Space>
+
+        <Modal
+          title="Readmit Resident"
+          visible={isModalVisible}
+          onOk={handleReadmitSubmit}
+          onCancel={handleCancel}
+        >
+          {readmitResident && <p>{readmitResident.name}</p>}
+          <Input
+            name="readmitNewBed"
+            addonBefore="Bed"
+            onChange={handleReadmitNewBed}
+          ></Input>
+
+          {readmitError && <Alert message={readmitError} type="error" />}
+        </Modal>
       </div>
     </>
   );

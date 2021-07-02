@@ -121,14 +121,14 @@ function PatientProfile(props) {
           });
 
           var preferredOrder = ['ND', 'AM', 'PM'];
-          formDataPros2.sort(compareDate);
+
           formDataPros2.sort(function (a, b) {
             return (
               preferredOrder.indexOf(b.timeslot) -
               preferredOrder.indexOf(a.timeslot)
             );
           });
-
+          formDataPros2.sort(compareDate);
           setProgressRecordSubmissions(formDataPros2);
           // console.log('prog', formDataPros2);
         })
