@@ -8,6 +8,7 @@ function AdmitResident(props) {
   const token = getToken();
   const [submitted, setSubmitted] = useState(false);
   const [admitError, setAdmitError] = useState();
+
   const formItemLayout = {
     labelCol: {
       span: 30,
@@ -53,8 +54,8 @@ function AdmitResident(props) {
         //console.log(response.data[0])
       })
       .catch((error) => {
-        console.log(error.response.data.message);
-        setAdmitError(error.response.data.message);
+        console.log(error.response.data.error);
+        setAdmitError(error.response.data.error);
         //   setPatientError(error.response.data.error)
       });
   };
