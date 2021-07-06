@@ -24,6 +24,7 @@ import { decryptField } from '../../Utils/EncryptContents';
 
 function ResidentsModuleMainList(props) {
   const { Text, Link } = Typography;
+  const [userObject, setUserObject] = useState({ username: null });
   const [patientData, setPatientData] = useState();
   const [dischargedPatientData, setDischargedPatientData] = useState();
   const [readmitBed, setReadmitBed] = useState();
@@ -31,6 +32,8 @@ function ResidentsModuleMainList(props) {
   const [readmitError, setReadmitError] = useState();
 
   const token = getToken();
+  const user = getUser();
+
   useEffect(() => {
     if (!token) {
       props.history.push('/login');
@@ -38,7 +41,9 @@ function ResidentsModuleMainList(props) {
     }
     axios
       .get(`${process.env.REACT_APP_API_URL}/users/verifyToken?token=${token}`)
-      .then((response) => {})
+      .then((response) => {
+        setUserObject(user);
+      })
       .catch((error) => {
         removeUserSession();
       });
@@ -206,6 +211,46 @@ function ResidentsModuleMainList(props) {
     },
   ];
 
+  const columnsRestricted = [
+    {
+      title: 'Name',
+      key: '_id',
+      dataIndex: 'name',
+    },
+    {
+      title: 'NRIC',
+      key: '_id',
+      dataIndex: 'NRIC',
+    },
+    {
+      title: 'Bed',
+      key: '_id',
+      dataIndex: 'bed',
+    },
+    {
+      title: 'Initial admission',
+      key: '_id',
+      dataIndex: 'creationDate',
+      render: (text) => <p>{moment(text).format('MMMM Do YYYY, h:mm:ss a')}</p>,
+    },
+    {
+      title: 'Action',
+      key: 'action',
+      width: 100,
+      render: (data) => (
+        <Space size="middle">
+          <a
+            onClick={() => {
+              props.history.push('/patient_profile/' + data.bed);
+            }}
+          >
+            View Patient
+          </a>
+        </Space>
+      ),
+    },
+  ];
+
   const columnsDischarged = [
     {
       title: 'Name',
@@ -260,27 +305,44 @@ function ResidentsModuleMainList(props) {
       <PageHeader className="site-page-header" title="Residents Module" />
       <div style={{ padding: '30px' }}>
         <Space direction="vertical" size="middle">
-          <Button
-            onClick={() => {
-              props.history.push('/residents_module/admit');
-            }}
-          >
-            Admit New Patient
-          </Button>
+          {userObject.role == 'full' && (
+            <Button
+              onClick={() => {
+                props.history.push('/residents_module/admit');
+              }}
+            >
+              Admit New Patient
+            </Button>
+          )}
           {/* <Text>Input Patient Bed</Text> */}
           <h3>Table of Admitted Patients</h3>
-          <Table
-            columns={columns}
-            dataSource={patientData}
-            onChange={onChange}
-          />
+          {userObject.role == 'full' && (
+            <Table
+              columns={columns}
+              dataSource={patientData}
+              onChange={onChange}
+            />
+          )}
+          {userObject.role == 'restricted' && (
+            <Table
+              columns={columnsRestricted}
+              dataSource={patientData}
+              onChange={onChange}
+            />
+          )}
           <br></br>
-          <h3>Table of Discharged Patients</h3>
-          <Table
-            columns={columnsDischarged}
-            dataSource={dischargedPatientData}
-            onChange={onChange}
-          />
+
+          {userObject.role == 'full' && (
+            <div>
+              <h3>Table of Discharged Patients</h3>
+
+              <Table
+                columns={columnsDischarged}
+                dataSource={dischargedPatientData}
+                onChange={onChange}
+              />
+            </div>
+          )}
         </Space>
 
         <Modal
