@@ -1,5 +1,5 @@
 import React, { useEffect, useState } from 'react';
-import { PageHeader } from 'antd';
+import { PageHeader, Switch } from 'antd';
 import {
   Typography,
   Table,
@@ -99,7 +99,6 @@ function ResidentsModuleMainList(props) {
           el.name = decryptField(el.name);
           el.NRIC = decryptField(el.NRIC);
         });
-        //console.log(response.data)
         setDischargedPatientData(beds);
       })
       .catch((error) => {
@@ -161,6 +160,55 @@ function ResidentsModuleMainList(props) {
   function handleReadmitNewBed(e) {
     setReadmitBed(e.target.value);
   }
+  function handleChangeMonitoringRestraints(e) {
+    // console.log(e);
+    let monitor;
+    if (e.restraintsMonitoring) {
+      monitor = false;
+      console.log('turn off');
+    } else {
+      monitor = true;
+      console.log('turn on');
+    }
+    axios
+      .post(
+        `${process.env.REACT_APP_API_URL}/residents/setRestraintsMonitoringStatus`,
+        { uuid: e.uuid, monitor: monitor },
+        { headers: { token: token } }
+      )
+      .then((response) => {
+        populateAdmittedResidents();
+        populateDischargedResidents();
+      })
+      .catch((error) => {
+        console.log(error.error);
+      });
+  }
+
+  function handleChangeMonitoringProgress(e) {
+    // console.log(e);
+    let monitor;
+    if (e.progressRecordMonitoring) {
+      monitor = false;
+      console.log('turn off');
+    } else {
+      monitor = true;
+      console.log('turn on');
+    }
+    axios
+      .post(
+        `${process.env.REACT_APP_API_URL}/residents/setProgressRecordMonitoringStatus`,
+        { uuid: e.uuid, monitor: monitor },
+        { headers: { token: token } }
+      )
+      .then((response) => {
+        populateAdmittedResidents();
+        populateDischargedResidents();
+      })
+      .catch((error) => {
+        console.log(error.error);
+      });
+  }
 
   const columns = [
     {
@@ -206,6 +254,23 @@ function ResidentsModuleMainList(props) {
           >
             <a href="#">Discharge</a>
           </Popconfirm>
+          <Switch
+            checked={data.restraintsMonitoring}
+            onChange={() => {
+              console.log(data.restraintsMonitoring);
+              handleChangeMonitoringRestraints(data);
+            }}
+            checkedChildren="R"
+            unCheckedChildren="R"
+          />{' '}
+          <Switch
+            checked={data.progressRecordMonitoring}
+            onChange={() => {
+              handleChangeMonitoringProgress(data);
+            }}
+            checkedChildren="P"
+            unCheckedChildren="P"
+          />
         </Space>
       ),
     },
