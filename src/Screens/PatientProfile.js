@@ -1,6 +1,7 @@
 import React, { useEffect, useState } from 'react';
 import { PageHeader, Space, Button, DatePicker, Switch } from 'antd';
 import RCTable from 'rc-table';
+import { useHistory } from 'react-router-dom';
 
 import axios from 'axios';
 import moment from 'moment-timezone';
@@ -25,6 +26,7 @@ function PatientProfile(props) {
   ]);
   const [progressRecordSubmissions, setProgressRecordSubmissions] = useState();
   const { RangePicker } = DatePicker;
+  let history = useHistory();
 
   let { bedNo } = useParams();
   const token = getToken();
@@ -189,7 +191,11 @@ function PatientProfile(props) {
 
   return (
     <>
-      <Button style={{ margin: '10px' }} onClick={handleBack} type="default">
+      <Button
+        style={{ margin: '10px' }}
+        onClick={() => history.goBack()}
+        type="default"
+      >
         Back to patient selector
       </Button>
 
