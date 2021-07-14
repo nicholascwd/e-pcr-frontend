@@ -4,7 +4,8 @@ import { Typography, Table, Space, Button, Input, Modal } from 'antd';
 import axios from 'axios';
 import moment from 'moment-timezone';
 import { getToken, removeUserSession } from '../../Utils/Common';
-import CompletionCards from './CompletionCards';
+import RestraintsCompletionCards from './RestraintsCompletionCards';
+import ProgressCompletionCards from './ProgressCompletionCards';
 
 function CompletionStatusModule(props) {
   const [restraintsPending, setRestraintsPending] = useState();
@@ -12,16 +13,27 @@ function CompletionStatusModule(props) {
     residentsUnderRestraintsMonitoring,
     setResidentsUnderRestraintsMonitoring,
   ] = useState();
-  const [isModalVisible, setIsModalVisible] = useState(false);
-  const showModal = () => {
-    setIsModalVisible(true);
+  const [progressPending, setProgressPending] = useState();
+  const [
+    residentsUnderProgressMonitoring,
+    setResidentsUnderProgressMonitoring,
+  ] = useState();
+  const [isRModalVisible, setIsRModalVisible] = useState(false);
+  const [isPModalVisible, setIsPModalVisible] = useState(false);
+  const showRModal = () => {
+    setIsRModalVisible(true);
+  };
+  const showPModal = () => {
+    setIsPModalVisible(true);
   };
   const handleOk = () => {
-    setIsModalVisible(false);
+    setIsPModalVisible(false);
+    setIsRModalVisible(false);
   };
 
   const handleCancel = () => {
-    setIsModalVisible(false);
+    setIsPModalVisible(false);
+    setIsRModalVisible(false);
   };
 
   useEffect(() => {
@@ -53,6 +65,20 @@ function CompletionStatusModule(props) {
 
     axios
       .post(
+        `${process.env.REACT_APP_API_URL}/completion_status/progressForm`,
+        { date: datePicker },
+        { headers: { token: token } }
+      )
+      .then((response) => {
+        // console.log('restraints status', response.data);
+        setProgressPending(response.data);
+      })
+      .catch((err) => {
+        console.log(err);
+      });
+
+    axios
+      .post(
         `${process.env.REACT_APP_API_URL}/residents/getRestraintsMonitoringStatus`,
         {},
         { headers: { token: token } }
@@ -64,11 +90,30 @@ function CompletionStatusModule(props) {
       .catch((err) => {
         console.log(err);
       });
+
+    axios
+      .post(
+        `${process.env.REACT_APP_API_URL}/residents/getProgressMonitoringStatus`,
+        {},
+        { headers: { token: token } }
+      )
+      .then((response) => {
+        console.log('restraints montor', response.data);
+        setResidentsUnderProgressMonitoring(response.data);
+      })
+      .catch((err) => {
+        console.log(err);
+      });
   }, []);
+
   let listOfResidentsRestraintsMonitoring =
     residentsUnderRestraintsMonitoring?.map((d) => (
       <li key={d['_id']}>{d['bed']}</li>
     ));
+
+  let listOfResidentsProgressMonitoring = residentsUnderProgressMonitoring?.map(
+    (d) => <li key={d['_id']}>{d['bed']}</li>
+  );
 
   const [datePicker, setDatepicker] = useState(
     moment().add(0, 'days').startOf('day')
@@ -82,27 +127,43 @@ function CompletionStatusModule(props) {
       />
       <div style={{ padding: '30px' }}>
         <Space direction="vertical" size="middle">
-          {/* <Button
-            onClick={() => {
-              props.history.push('/users_module/addUser');
-            }}
-          >
-            Back
-          </Button> */}
           {restraintsPending && (
             <>
-              <CompletionCards pendingSubmission={restraintsPending} />
+              <RestraintsCompletionCards
+                pendingSubmission={restraintsPending}
+              />
               <br></br>
-              <Button type="primary" onClick={showModal}>
+              <Button type="primary" onClick={showRModal}>
                 Residents under Restraints Monitoring
               </Button>
               <Modal
                 title="Residents under Restraints Monitoring"
-                visible={isModalVisible}
+                visible={isRModalVisible}
                 onOk={handleOk}
+                onCancel={handleCancel}
               >
                 {residentsUnderRestraintsMonitoring && (
                   <>{listOfResidentsRestraintsMonitoring}</>
+                )}
+              </Modal>
+            </>
+          )}
+
+          {progressPending && (
+            <>
+              <ProgressCompletionCards pendingSubmission={progressPending} />
+              <br></br>
+              <Button type="primary" onClick={showPModal}>
+                Residents under Progress Monitoring
+              </Button>
+              <Modal
+                title="Residents under Progress Monitoring"
+                visible={isPModalVisible}
+                onOk={handleOk}
+                onCancel={handleCancel}
+              >
+                {residentsUnderProgressMonitoring && (
+                  <>{listOfResidentsProgressMonitoring}</>
                 )}
               </Modal>
             </>
