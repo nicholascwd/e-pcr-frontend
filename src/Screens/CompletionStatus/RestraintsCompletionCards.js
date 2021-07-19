@@ -46,17 +46,17 @@ function RestraintsCompletionCards(props) {
       <div className="site-card-wrapper">
         <Row gutter={16}>
           <Col span={8}>
-            <Card title="0000" bordered={false}>
+            <Card title="0000H" bordered={false}>
               {list0000}
             </Card>
           </Col>
           <Col span={8}>
-            <Card title="0200" bordered={false}>
+            <Card title="0200H" bordered={false}>
               {list0200}
             </Card>
           </Col>
           <Col span={8}>
-            <Card title="0400" bordered={false}>
+            <Card title="0400H" bordered={false}>
               {list0400}
             </Card>
           </Col>
@@ -64,17 +64,17 @@ function RestraintsCompletionCards(props) {
         <br></br>
         <Row gutter={16}>
           <Col span={8}>
-            <Card title="0600" bordered={false}>
+            <Card title="0600H" bordered={false}>
               {list0600}
             </Card>
           </Col>
           <Col span={8}>
-            <Card title="0800" bordered={false}>
+            <Card title="0800H" bordered={false}>
               {list0800}
             </Card>
           </Col>
           <Col span={8}>
-            <Card title="1000" bordered={false}>
+            <Card title="1000H" bordered={false}>
               {list1000}
             </Card>
           </Col>
@@ -82,17 +82,17 @@ function RestraintsCompletionCards(props) {
         <br></br>
         <Row gutter={16}>
           <Col span={8}>
-            <Card title="1200" bordered={false}>
+            <Card title="1200H" bordered={false}>
               {list1200}
             </Card>
           </Col>
           <Col span={8}>
-            <Card title="1400" bordered={false}>
+            <Card title="1400H" bordered={false}>
               {list1400}
             </Card>
           </Col>
           <Col span={8}>
-            <Card title="1600" bordered={false}>
+            <Card title="1600H" bordered={false}>
               {list1600}
             </Card>
           </Col>
@@ -100,17 +100,17 @@ function RestraintsCompletionCards(props) {
         <br></br>
         <Row gutter={16}>
           <Col span={8}>
-            <Card title="1800" bordered={false}>
+            <Card title="1800H" bordered={false}>
               {list1800}
             </Card>
           </Col>
           <Col span={8}>
-            <Card title="2000" bordered={false}>
+            <Card title="2000H" bordered={false}>
               {list2000}
             </Card>
           </Col>
           <Col span={8}>
-            <Card title="2200" bordered={false}>
+            <Card title="2200H" bordered={false}>
               {list2200}
             </Card>
           </Col>
