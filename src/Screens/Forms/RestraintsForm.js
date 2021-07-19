@@ -131,18 +131,18 @@ function RestraintsForm(props) {
 
                 <Form.Item name="time" label="Time" required>
                   <Select placeholder="Select time of check" virtual={false}>
-                    <Option value="0000">12am midnight</Option>
-                    <Option value="0200">2am</Option>
-                    <Option value="0400">4am</Option>
-                    <Option value="0600">6am</Option>
-                    <Option value="0800">8am</Option>
-                    <Option value="1000">10am</Option>
-                    <Option value="1200">12pm noon</Option>
-                    <Option value="1400">2pm</Option>
-                    <Option value="1600">4pm</Option>
-                    <Option value="1800">6pm</Option>
-                    <Option value="2000">8pm</Option>
-                    <Option value="2200">10pm</Option>
+                    <Option value="0000">0000</Option>
+                    <Option value="0200">0200</Option>
+                    <Option value="0400">0400</Option>
+                    <Option value="0600">0600</Option>
+                    <Option value="0800">0800</Option>
+                    <Option value="1000">1000</Option>
+                    <Option value="1200">1200</Option>
+                    <Option value="1400">1400</Option>
+                    <Option value="1600">1600</Option>
+                    <Option value="1800">1800</Option>
+                    <Option value="2000">2000</Option>
+                    <Option value="2200">2200</Option>
                   </Select>
                 </Form.Item>
 
