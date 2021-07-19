@@ -1,11 +1,11 @@
-import React, { useEffect, useState } from 'react';
+import React, { useEffect, useReducer, useState } from 'react';
 import { PageHeader, Space, Button, DatePicker, Switch } from 'antd';
 import RCTable from 'rc-table';
 
 import axios from 'axios';
 import moment from 'moment-timezone';
 
-import { getToken, removeUserSession } from '../Utils/Common';
+import { getToken, getUser, removeUserSession } from '../Utils/Common';
 import { useParams } from 'react-router';
 import { decryptObject } from '../Utils/EncryptContents';
 import { restraintsPdfExport } from './PDFExport/RestraintsExport';
@@ -13,11 +13,13 @@ import { restraintsColumns } from './FormColumns/RestraintsTable';
 import { progressRecordColumns } from './FormColumns/ProgressRecordTable';
 import { progressRecordPdfExport } from './PDFExport/ProgressRecordExport';
 import PatientCard from './ResidentsModule/PatientCard';
+
 import '../Assets/index.less';
 
 function PatientProfile(props) {
   const [patientData, setPatientData] = useState();
   const [patientError, setPatientError] = useState();
+  const [userRole, setUserRole] = useState({ role: null });
   const [restraintsSubmissions, setRestraintsSubmissions] = useState();
   const [restraintsDatePicker, setRestraintsDatePicker] = useState([
     moment().add(-2, 'days').startOf('day'),
@@ -25,6 +27,7 @@ function PatientProfile(props) {
   ]);
   const [progressRecordSubmissions, setProgressRecordSubmissions] = useState();
   const { RangePicker } = DatePicker;
+  const user = getUser();
 
   let { bedNo } = useParams();
   const token = getToken();
@@ -37,6 +40,8 @@ function PatientProfile(props) {
       .get(`${process.env.REACT_APP_API_URL}/users/verifyToken?token=${token}`)
       .then((response) => {
         //for debug
+        setUserRole(user.role);
+        // console.log('role, ', user.role);
       })
       .catch((error) => {
         removeUserSession();
@@ -207,17 +212,22 @@ function PatientProfile(props) {
                 Submit Progress Record Form
               </Button>
               <br></br>
-              <h4>Monitoring Toggle</h4>
-              <p>Restraints Monitoring:</p>
-              <Switch
-                defaultChecked={patientData.restraintsMonitoring}
-                onChange={restraintsStatusChange}
-              />
-              Progress Record Monitoring:
-              <Switch
-                defaultChecked={patientData.progressRecordMonitoring}
-                onChange={progressRecordStatusChange}
-              />
+              {userRole == 'full' && (
+                <>
+                  <h4>Monitoring Toggle</h4>
+                  <p>Restraints Monitoring:</p>
+                  <Switch
+                    defaultChecked={patientData.restraintsMonitoring}
+                    onChange={restraintsStatusChange}
+                  />{' '}
+                  Progress Record Monitoring:
+                  <Switch
+                    defaultChecked={patientData.progressRecordMonitoring}
+                    onChange={progressRecordStatusChange}
+                  />
+                </>
+              )}
+
               <br></br>
               <Space direction="vertical" size={12}>
                 <span>Select Date for Reports below</span>
