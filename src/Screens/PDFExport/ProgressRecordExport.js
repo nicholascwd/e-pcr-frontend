@@ -36,6 +36,11 @@ export const progressRecordPdfExport = (
     row.push(JSON.parse(progressRecordSubmissions[i].formVals).p12);
     row.push(JSON.parse(progressRecordSubmissions[i].formVals)['r-remarks']);
     row.push(progressRecordSubmissions[i].staff);
+    row.push(
+      moment(progressRecordSubmissions[i].creationDate).format(
+        'MMMM Do YYYY, h:mm:ss a'
+      )
+    );
     tableData.push(row);
   }
 
@@ -61,6 +66,7 @@ export const progressRecordPdfExport = (
         'Visited',
         'Remarks',
         'Staff Signature',
+        'Submission D/T',
       ],
     ],
     body: tableData,

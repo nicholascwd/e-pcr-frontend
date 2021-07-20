@@ -28,6 +28,11 @@ export const restraintsPdfExport = (patientData, restraintsSubmissions) => {
     );
     row.push(JSON.parse(restraintsSubmissions[i].formVals)['r-remarks']);
     row.push(restraintsSubmissions[i].staff);
+    row.push(
+      moment(restraintsSubmissions[i].creationDate).format(
+        'MMMM Do YYYY, h:mm:ss a'
+      )
+    );
     tableData.push(row);
   }
 
@@ -46,6 +51,7 @@ export const restraintsPdfExport = (patientData, restraintsSubmissions) => {
         'Restraints Type',
         'Remarks',
         'Staff Signature',
+        'Submission D/T',
       ],
     ],
     body: tableData,

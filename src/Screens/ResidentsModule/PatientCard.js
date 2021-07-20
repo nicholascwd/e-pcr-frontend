@@ -3,7 +3,6 @@ import { decryptField } from '../../Utils/EncryptContents';
 import moment from 'moment-timezone';
 
 function PatientCard(props) {
-  console.log('props ', props);
   return (
     <>
       <h4>

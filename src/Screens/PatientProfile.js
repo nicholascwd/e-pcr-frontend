@@ -208,7 +208,11 @@ function PatientProfile(props) {
               <Button type="primary" onClick={handleClickRestraints}>
                 Submit Restraints Form
               </Button>
-              <Button type="primary" onClick={handleClickProgressRecord}>
+              <Button
+                type="primary"
+                onClick={handleClickProgressRecord}
+                style={{ background: '#32a852' }}
+              >
                 Submit Progress Record Form
               </Button>
               <br></br>
