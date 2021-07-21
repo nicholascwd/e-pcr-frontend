@@ -31,6 +31,7 @@ const formItemLayout = {
 function RestraintsForm(props) {
   const [patientData, setPatientData] = useState();
   const [patientError, setPatientError] = useState();
+  const [selectedDateTime, setSelectedDateTime] = useState(null);
   const [staff, setStaff] = useState();
   const [submitted, setSubmitted] = useState(false);
 
@@ -145,6 +146,12 @@ function RestraintsForm(props) {
                     <Option value="2200">2200</Option>
                   </Select>
                 </Form.Item>
+
+                {selectedDateTime && (
+                  <>
+                    <p>{selectedDateTime}</p>
+                  </>
+                )}
 
                 <Form.Item name="r1" label="Restraints applied correctly">
                   <Radio.Group>
