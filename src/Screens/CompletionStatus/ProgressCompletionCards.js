@@ -4,9 +4,21 @@ import { Card, Col, Row } from 'antd';
 function ProgressCompletionCards(props) {
   // console.log(props.pendingSubmission);
   const allIncompleteRestraints = props.pendingSubmission;
-  const listND = allIncompleteRestraints['ND'].map((d) => <li key={d}>{d}</li>);
-  const listAM = allIncompleteRestraints['AM'].map((d) => <li key={d}>{d}</li>);
-  const listPM = allIncompleteRestraints['PM'].map((d) => <li key={d}>{d}</li>);
+  const listND = allIncompleteRestraints['ND'].map((d) => (
+    <li key={d}>
+      <a href={`/patient_profile/${d}`}>{d}</a>
+    </li>
+  ));
+  const listAM = allIncompleteRestraints['AM'].map((d) => (
+    <li key={d}>
+      <a href={`/patient_profile/${d}`}>{d}</a>
+    </li>
+  ));
+  const listPM = allIncompleteRestraints['PM'].map((d) => (
+    <li key={d}>
+      <a href={`/patient_profile/${d}`}>{d}</a>
+    </li>
+  ));
 
   return (
     <>

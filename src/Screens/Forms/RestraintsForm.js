@@ -73,6 +73,7 @@ function RestraintsForm(props) {
       alert('Time is missing');
       return;
     }
+
     const dateTime = moment(values['date']).startOf('day');
     values['date'] = values['date'].format('YYYY-MM-DD');
     console.log('Received values of form: ', JSON.stringify(values));
@@ -130,7 +131,14 @@ function RestraintsForm(props) {
                   <DatePicker />
                 </Form.Item>
 
-                <Form.Item name="time" label="Time" required>
+                <Form.Item
+                  onChange={() => {
+                    console.log('time change');
+                  }}
+                  name="time"
+                  label="Time"
+                  required
+                >
                   <Select placeholder="Select time of check" virtual={false}>
                     <Option value="0000">0000</Option>
                     <Option value="0200">0200</Option>
@@ -150,6 +158,7 @@ function RestraintsForm(props) {
                 {selectedDateTime && (
                   <>
                     <p>{selectedDateTime}</p>
+                    <p>{}</p>
                   </>
                 )}
 
