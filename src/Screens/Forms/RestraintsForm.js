@@ -31,6 +31,7 @@ const formItemLayout = {
 function RestraintsForm(props) {
   const [patientData, setPatientData] = useState();
   const [patientError, setPatientError] = useState();
+  const [selectedDateTime, setSelectedDateTime] = useState(null);
   const [staff, setStaff] = useState();
   const [submitted, setSubmitted] = useState(false);
 
@@ -72,6 +73,7 @@ function RestraintsForm(props) {
       alert('Time is missing');
       return;
     }
+
     const dateTime = moment(values['date']).startOf('day');
     values['date'] = values['date'].format('YYYY-MM-DD');
     console.log('Received values of form: ', JSON.stringify(values));
@@ -129,7 +131,14 @@ function RestraintsForm(props) {
                   <DatePicker />
                 </Form.Item>
 
-                <Form.Item name="time" label="Time" required>
+                <Form.Item
+                  onChange={() => {
+                    console.log('time change');
+                  }}
+                  name="time"
+                  label="Time"
+                  required
+                >
                   <Select placeholder="Select time of check" virtual={false}>
                     <Option value="0000">0000</Option>
                     <Option value="0200">0200</Option>
@@ -145,6 +154,13 @@ function RestraintsForm(props) {
                     <Option value="2200">2200</Option>
                   </Select>
                 </Form.Item>
+
+                {selectedDateTime && (
+                  <>
+                    <p>{selectedDateTime}</p>
+                    <p>{}</p>
+                  </>
+                )}
 
                 <Form.Item name="r1" label="Restraints applied correctly">
                   <Radio.Group>

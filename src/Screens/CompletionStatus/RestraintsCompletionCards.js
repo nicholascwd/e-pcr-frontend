@@ -5,40 +5,64 @@ function RestraintsCompletionCards(props) {
   //   console.log(props.pendingSubmission);
   const allIncompleteRestraints = props.pendingSubmission;
   const list0000 = allIncompleteRestraints['0000'].map((d) => (
-    <li key={d}>{d}</li>
+    <li key={d}>
+      <a href={`/patient_profile/${d}`}>{d}</a>
+    </li>
   ));
   const list0200 = allIncompleteRestraints['0200'].map((d) => (
-    <li key={d}>{d}</li>
+    <li key={d}>
+      <a href={`/patient_profile/${d}`}>{d}</a>
+    </li>
   ));
   const list0400 = allIncompleteRestraints['0400'].map((d) => (
-    <li key={d}>{d}</li>
+    <li key={d}>
+      <a href={`/patient_profile/${d}`}>{d}</a>
+    </li>
   ));
   const list0600 = allIncompleteRestraints['0600'].map((d) => (
-    <li key={d}>{d}</li>
+    <li key={d}>
+      <a href={`/patient_profile/${d}`}>{d}</a>
+    </li>
   ));
   const list0800 = allIncompleteRestraints['0800'].map((d) => (
-    <li key={d}>{d}</li>
+    <li key={d}>
+      <a href={`/patient_profile/${d}`}>{d}</a>
+    </li>
   ));
   const list1000 = allIncompleteRestraints['1000'].map((d) => (
-    <li key={d}>{d}</li>
+    <li key={d}>
+      <a href={`/patient_profile/${d}`}>{d}</a>
+    </li>
   ));
   const list1200 = allIncompleteRestraints['1200'].map((d) => (
-    <li key={d}>{d}</li>
+    <li key={d}>
+      <a href={`/patient_profile/${d}`}>{d}</a>
+    </li>
   ));
   const list1400 = allIncompleteRestraints['1400'].map((d) => (
-    <li key={d}>{d}</li>
+    <li key={d}>
+      <a href={`/patient_profile/${d}`}>{d}</a>
+    </li>
   ));
   const list1600 = allIncompleteRestraints['1600'].map((d) => (
-    <li key={d}>{d}</li>
+    <li key={d}>
+      <a href={`/patient_profile/${d}`}>{d}</a>
+    </li>
   ));
   const list1800 = allIncompleteRestraints['1800'].map((d) => (
-    <li key={d}>{d}</li>
+    <li key={d}>
+      <a href={`/patient_profile/${d}`}>{d}</a>
+    </li>
   ));
   const list2000 = allIncompleteRestraints['2000'].map((d) => (
-    <li key={d}>{d}</li>
+    <li key={d}>
+      <a href={`/patient_profile/${d}`}>{d}</a>
+    </li>
   ));
   const list2200 = allIncompleteRestraints['2200'].map((d) => (
-    <li key={d}>{d}</li>
+    <li key={d}>
+      <a href={`/patient_profile/${d}`}>{d}</a>
+    </li>
   ));
   return (
     <>
