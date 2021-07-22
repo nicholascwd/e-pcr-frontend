@@ -10,7 +10,7 @@
     "antd": "^4.16.8",
     "axios": "^0.21.1",
     "bootstrap": "^5.0.2",
-    "crypto-js": "^4.0.0",
+    "crypto-js": "^4.1.1",
     "dotenv": "^10.0.0",
     "jspdf": "^2.3.1",
     "jspdf-autotable": "^3.5.15",
