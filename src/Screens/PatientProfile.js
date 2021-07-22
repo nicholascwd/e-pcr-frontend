@@ -1,7 +1,7 @@
 import React, { useEffect, useReducer, useState } from 'react';
 import { PageHeader, Space, Button, DatePicker, Switch } from 'antd';
 import RCTable from 'rc-table';
-
+import BootstrapTable from 'react-bootstrap-table-next';
 import axios from 'axios';
 import moment from 'moment-timezone';
 
@@ -13,6 +13,7 @@ import { restraintsColumns } from './FormColumns/RestraintsTable';
 import { progressRecordColumns } from './FormColumns/ProgressRecordTable';
 import { progressRecordPdfExport } from './PDFExport/ProgressRecordExport';
 import PatientCard from './ResidentsModule/PatientCard';
+import 'react-bootstrap-table-next/dist/react-bootstrap-table2.min.css';
 
 import '../Assets/index.less';
 
@@ -58,7 +59,7 @@ function PatientProfile(props) {
       })
       .catch((error) => {
         console.log(error);
-        setPatientError(error.response.data.error);
+        // setPatientError(error.response.data.error);
       });
   }, []);
 
@@ -82,7 +83,7 @@ function PatientProfile(props) {
   }
 
   useEffect(() => {
-    //    //obtain resident restraint's form submission history
+    //obtain resident restraint's form submission history
     if (patientData) {
       axios
         .post(
@@ -104,7 +105,7 @@ function PatientProfile(props) {
           formDataPros.sort(compareDate);
 
           setRestraintsSubmissions(formDataPros);
-          // console.log(formDataPros);
+          console.log('FDR', formDataPros);
         })
         .catch((error) => {
           console.log(error);
@@ -257,13 +258,20 @@ function PatientProfile(props) {
                 Export Restraints Data
               </Button>
               <div className="pcf">
-                <RCTable
+                {/* <RCTable
                   style={{ width: mobileView ? 400 : 1100 }}
                   scroll={{ x: 300 }}
                   columns={restraintsColumns}
                   className="table"
                   data={restraintsSubmissions}
-                />
+                /> */}
+                {restraintsSubmissions && (
+                  <BootstrapTable
+                    keyField="id"
+                    data={restraintsSubmissions}
+                    columns={restraintsColumns}
+                  />
+                )}
               </div>
               <h3>Progress Record Form submission history</h3>
               <Button
@@ -274,13 +282,20 @@ function PatientProfile(props) {
                 Export Progress Record Data
               </Button>
               <div className="pcf">
-                <RCTable
+                {/* <RCTable
                   style={{ width: mobileView ? 400 : 1100 }}
                   scroll={{ x: 300 }}
                   columns={progressRecordColumns}
                   data={progressRecordSubmissions}
                   className="table"
-                />
+                /> */}
+                {progressRecordSubmissions && (
+                  <BootstrapTable
+                    keyField="id"
+                    data={progressRecordSubmissions}
+                    columns={progressRecordColumns}
+                  />
+                )}
               </div>
             </>
           )}

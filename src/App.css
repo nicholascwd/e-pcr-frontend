@@ -43,13 +43,21 @@
 
 .pcf > table,
 .rc-table-row,
-.rc-table-cell {
+div > div > table > tbody > tr > td,
+div > div > table > thead > tr > th {
   border: 1px solid rgb(142, 142, 142);
 }
 
-.rc-table-cell {
+.rc-table-cell,
+tbody > tr > td {
   text-align: center;
-  padding: 3px;
+  font-size: 12px;
+  /* padding: 3px; */
+}
+
+thead > tr > th {
+  text-align: center;
+  font-size: 12px;
 }
 tr:nth-child(even) {
   background-color: #fff;
