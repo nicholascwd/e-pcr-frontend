@@ -29,24 +29,20 @@ export const restraintsColumns = [
     // width: 50,
     formatter: (text) => <p>{JSON.parse(text).r2}</p>,
   },
+
   {
-    text: 'Restrained Limbs',
-    children: [
-      {
-        text: 'Adequate Circulation',
-        key: '_id',
-        dataField: 'formVals',
-        // width: 50,
-        formatter: (text) => <p>{JSON.parse(text).r3}</p>,
-      },
-      {
-        text: 'Adequate ROM',
-        key: '_id',
-        dataField: 'formVals',
-        // width: 50,
-        formatter: (text) => <p>{JSON.parse(text).r4}</p>,
-      },
-    ],
+    text: 'Adequate Circulation (Restrained Limbs)',
+    key: '_id',
+    dataField: 'formVals',
+    // width: 50,
+    formatter: (text) => <p>{JSON.parse(text).r3}</p>,
+  },
+  {
+    text: 'Adequate ROM (Restrained Limbs)',
+    key: '_id',
+    dataField: 'formVals',
+    // width: 50,
+    formatter: (text) => <p>{JSON.parse(text).r4}</p>,
   },
 
   {
