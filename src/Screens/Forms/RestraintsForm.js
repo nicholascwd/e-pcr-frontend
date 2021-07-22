@@ -162,7 +162,7 @@ function RestraintsForm(props) {
                   </>
                 )}
 
-                <Form.Item name="r1" label="Restraints applied correctly">
+                <Form.Item name="r1" label="1. Restraints applied correctly">
                   <Radio.Group>
                     <Radio value="Y">Yes</Radio>
                     <Radio value="N">No</Radio>
@@ -171,7 +171,7 @@ function RestraintsForm(props) {
                 </Form.Item>
                 <Form.Item
                   name="r2"
-                  label="Body & limbs in comfortable position"
+                  label="2. Body & limbs in comfortable position"
                 >
                   <Radio.Group>
                     <Radio value="Y">Yes</Radio>
@@ -181,7 +181,7 @@ function RestraintsForm(props) {
                 </Form.Item>
                 <Form.Item
                   name="r3"
-                  label="(Restrained Extremities) Adequate circulation"
+                  label="3. (Restrained Extremities) Adequate circulation"
                 >
                   <Radio.Group>
                     <Radio value="Y">Yes</Radio>
@@ -191,7 +191,7 @@ function RestraintsForm(props) {
                 </Form.Item>
                 <Form.Item
                   name="r4"
-                  label="(Restrained Extremities) Adequate ROM"
+                  label="4. (Restrained Extremities) Adequate ROM"
                 >
                   <Radio.Group>
                     <Radio value="Y">Yes</Radio>
@@ -199,7 +199,7 @@ function RestraintsForm(props) {
                     <Radio value="">NA</Radio>
                   </Radio.Group>
                 </Form.Item>
-                <Form.Item name="r5" label="Skin integrity checked">
+                <Form.Item name="r5" label="5. Skin integrity checked">
                   <Radio.Group>
                     <Radio value="Y">Yes</Radio>
                     <Radio value="N">No</Radio>
@@ -207,10 +207,13 @@ function RestraintsForm(props) {
                   </Radio.Group>
                 </Form.Item>
 
-                <Form.Item name="r-restraints-type" label="Type of Restraints">
+                <Form.Item
+                  name="r-restraints-type"
+                  label="6. Type of Restraints"
+                >
                   <Input />
                 </Form.Item>
-                <Form.Item name="r-remarks" label="Remarks">
+                <Form.Item name="r-remarks" label="7. Remarks">
                   <Input />
                 </Form.Item>
 
