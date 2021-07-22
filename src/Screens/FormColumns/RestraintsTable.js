@@ -48,7 +48,6 @@ export const restraintsColumns = [
       },
     ],
   },
-
   {
     text: 'Skin Integrity Checked',
     key: '_id',
