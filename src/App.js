@@ -27,6 +27,7 @@ import UsersModule from './Screens/UsersModule';
 import AddUser from './Screens/UsersModule/AddUser';
 import ResetPassword from './Screens/UsersModule/PasswordReset';
 import CompletionStatusModule from './Screens/CompletionStatus';
+import ChangeRequestModal from './Screens/Forms/ChangeRequestModal';
 
 function App() {
   const [authLoading, setAuthLoading] = useState(true);
@@ -95,7 +96,7 @@ function App() {
           {window.location.pathname !== '/login' ? (
             <>
               <Sider
-                breakpoint="lg"
+                breakpoint="xxl"
                 collapsedWidth="0"
                 onBreakpoint={(broken) => {
                   console.log(broken);
@@ -194,6 +195,11 @@ function App() {
                     exact
                     path={['/forms/progress_record_form/:uuid', '/']}
                     component={ProgressRecordForm}
+                  />
+                  <PrivateRoute
+                    exact
+                    path={['/forms/changeRequest', '/']}
+                    component={ChangeRequestModal}
                   />
                   <PrivateRoute
                     exact

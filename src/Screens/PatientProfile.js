@@ -1,5 +1,13 @@
 import React, { useEffect, useReducer, useState } from 'react';
-import { PageHeader, Space, Button, DatePicker, Switch } from 'antd';
+import {
+  PageHeader,
+  Space,
+  Button,
+  DatePicker,
+  Switch,
+  Modal,
+  Input,
+} from 'antd';
 import RCTable from 'rc-table';
 import BootstrapTable from 'react-bootstrap-table-next';
 import axios from 'axios';
@@ -7,11 +15,16 @@ import moment from 'moment-timezone';
 
 import { getToken, getUser, removeUserSession } from '../Utils/Common';
 import { useParams } from 'react-router';
-import { decryptObject } from '../Utils/EncryptContents';
+import {
+  encryptField,
+  decryptObject,
+  decryptField,
+} from '../Utils/EncryptContents';
 import { restraintsPdfExport } from './PDFExport/RestraintsExport';
-import { restraintsColumns } from './FormColumns/RestraintsTable';
+// import { restraintsColumns } from './FormColumns/RestraintsTable';
 import { progressRecordColumns } from './FormColumns/ProgressRecordTable';
 import { progressRecordPdfExport } from './PDFExport/ProgressRecordExport';
+import ChangeRequestModal from './Forms/ChangeRequestModal';
 import PatientCard from './ResidentsModule/PatientCard';
 import 'react-bootstrap-table-next/dist/react-bootstrap-table2.min.css';
 
@@ -27,6 +40,24 @@ function PatientProfile(props) {
     moment().endOf('day'),
   ]);
   const [progressRecordSubmissions, setProgressRecordSubmissions] = useState();
+  const [changeRequestRow, setChangeRequestRow] = useState();
+  const [changeRequestType, setChangeRequestType] = useState();
+  const [showChangeRequest, setShowChangeRequest] = useState(true);
+  const [changeRequestComment, setChangeRequestComment] = useState(true);
+
+  const [isModalVisible, setIsModalVisible] = useState(false);
+  const showModal = (e, type) => {
+    // setReadmitResident({ uuid: e.uuid, name: e.name });
+    // setReadmitError(null);
+    if (type == 'restraints') {
+      console.log('restraints CR');
+    }
+    setIsModalVisible(true);
+  };
+  const handleCancel = () => {
+    setIsModalVisible(false);
+  };
+
   const { RangePicker } = DatePicker;
   const user = getUser();
 
@@ -82,8 +113,13 @@ function PatientProfile(props) {
     return 0;
   }
 
+  let changeRequest = (data) => {
+    console.log(data);
+  };
+
   useEffect(() => {
     //obtain resident restraint's form submission history
+
     if (patientData) {
       axios
         .post(
@@ -105,7 +141,7 @@ function PatientProfile(props) {
           formDataPros.sort(compareDate);
 
           setRestraintsSubmissions(formDataPros);
-          console.log('FDR', formDataPros);
+          // console.log('FDR', formDataPros);
         })
         .catch((error) => {
           console.log(error);
@@ -142,10 +178,7 @@ function PatientProfile(props) {
           console.log(error);
         });
     }
-  }, [patientData, restraintsDatePicker]);
-
-  const mql = window.matchMedia('(max-width: 600px)');
-  let mobileView = mql.matches;
+  }, [patientData, restraintsDatePicker, isModalVisible]);
 
   function handleClickRestraints() {
     props.history.push(`/forms/restraints_form/${patientData.uuid}`);
@@ -192,6 +225,269 @@ function PatientProfile(props) {
         console.log(error);
       });
   }
+
+  function handleChangeRequestComment(e) {
+    setChangeRequestComment(e.target.value);
+    console.log(e.target.value);
+  }
+
+  function handleChangeRequestSubmit() {
+    axios
+      .post(
+        `${process.env.REACT_APP_API_URL}/forms/restraintsForm/changeRequest`,
+        {
+          _id: changeRequestRow,
+          changeRequestComment: encryptField(changeRequestComment),
+        },
+        { headers: { token: token } }
+      )
+      .then(() => {
+        setIsModalVisible(false);
+      })
+      .catch((error) => {
+        console.log(error);
+      });
+  }
+
+  const restraintsColumns = [
+    {
+      text: 'Date',
+      key: '_id',
+      dataField: 'formVals',
+      // fixed: "left",
+      // width: 100,
+      formatter: (text) => <p>{JSON.parse(text).date}</p>,
+    },
+    {
+      text: 'Time',
+      key: '_id',
+      dataField: 'formVals',
+      // width: 50,
+      formatter: (text) => <p>{JSON.parse(text).time}</p>,
+    },
+    {
+      text: 'Restraints Applied Correctly',
+      key: '_id',
+      dataField: 'formVals',
+      // width: 50,
+      formatter: (text) => <p>{JSON.parse(text).r1}</p>,
+    },
+    {
+      text: 'Body & Limbs Comfortable',
+      key: '_id',
+      dataField: 'formVals',
+      // width: 50,
+      formatter: (text) => <p>{JSON.parse(text).r2}</p>,
+    },
+
+    {
+      text: 'Adequate Circulation (Restrained Limbs)',
+      key: '_id',
+      dataField: 'formVals',
+      // width: 50,
+      formatter: (text) => <p>{JSON.parse(text).r3}</p>,
+    },
+    {
+      text: 'Adequate ROM (Restrained Limbs)',
+      key: '_id',
+      dataField: 'formVals',
+      // width: 50,
+      formatter: (text) => <p>{JSON.parse(text).r4}</p>,
+    },
+
+    {
+      text: 'Skin Integrity Checked',
+      key: '_id',
+      dataField: 'formVals',
+      // width: 50,
+      formatter: (text) => <p>{JSON.parse(text).r5}</p>,
+    },
+    {
+      text: 'Type of Restraints',
+      key: '_id',
+      dataField: 'formVals',
+      // width: 50,
+      formatter: (text) => <p>{JSON.parse(text)['r-restraints-type']}</p>,
+    },
+    {
+      text: 'Remarks',
+      key: '_id',
+      dataField: 'formVals',
+      // width: 50,
+      formatter: (text) => <p>{JSON.parse(text)['r-remarks']}</p>,
+    },
+    {
+      text: 'Staff',
+      key: '_id',
+      dataField: 'staff',
+      // width: 50,
+    },
+    {
+      text: 'Submitted D/T',
+      key: '_id',
+      dataField: 'creationDate',
+      // width: 50,
+      formatter: (text) => (
+        <p>{moment(text).format('MMMM Do YYYY, h:mm:ss a')}</p>
+      ),
+      // fixed: "right",
+      // width: 100,
+    },
+    {
+      text: 'Changes',
+      key: '_id',
+      dataField: 'changeRequest',
+      // width: 50,
+      formatter: (text) => {
+        let changeRequestString = '';
+        let i = 1;
+        text.map((data) => {
+          console.log(data);
+          changeRequestString =
+            changeRequestString +
+            `[${i}. ${data.metadata} COMMENT: ${decryptField(data.comment)}] `;
+          i++;
+        });
+        console.log('new crs', changeRequestString);
+        {
+          return changeRequestString;
+        }
+      },
+
+      // fixed: "right",
+      // width: 100,
+    },
+    {
+      text: 'Action',
+      dataField: '_id',
+      // width: 50,
+      formatter: (data) => (
+        <>
+          <Button
+            onClick={() => {
+              setChangeRequestRow(data);
+              console.log('add CR, ', data);
+              showModal(data, 'restraints');
+            }}
+          >
+            Add Remark
+          </Button>
+        </>
+      ),
+      // fixed: "right",
+      // width: 100,
+    },
+  ];
+
+  const restraintsColumnsRestricted = [
+    {
+      text: 'Date',
+      key: '_id',
+      dataField: 'formVals',
+      // fixed: "left",
+      // width: 100,
+      formatter: (text) => <p>{JSON.parse(text).date}</p>,
+    },
+    {
+      text: 'Time',
+      key: '_id',
+      dataField: 'formVals',
+      // width: 50,
+      formatter: (text) => <p>{JSON.parse(text).time}</p>,
+    },
+    {
+      text: 'Restraints Applied Correctly',
+      key: '_id',
+      dataField: 'formVals',
+      // width: 50,
+      formatter: (text) => <p>{JSON.parse(text).r1}</p>,
+    },
+    {
+      text: 'Body & Limbs Comfortable',
+      key: '_id',
+      dataField: 'formVals',
+      // width: 50,
+      formatter: (text) => <p>{JSON.parse(text).r2}</p>,
+    },
+
+    {
+      text: 'Adequate Circulation (Restrained Limbs)',
+      key: '_id',
+      dataField: 'formVals',
+      // width: 50,
+      formatter: (text) => <p>{JSON.parse(text).r3}</p>,
+    },
+    {
+      text: 'Adequate ROM (Restrained Limbs)',
+      key: '_id',
+      dataField: 'formVals',
+      // width: 50,
+      formatter: (text) => <p>{JSON.parse(text).r4}</p>,
+    },
+
+    {
+      text: 'Skin Integrity Checked',
+      key: '_id',
+      dataField: 'formVals',
+      // width: 50,
+      formatter: (text) => <p>{JSON.parse(text).r5}</p>,
+    },
+    {
+      text: 'Type of Restraints',
+      key: '_id',
+      dataField: 'formVals',
+      // width: 50,
+      formatter: (text) => <p>{JSON.parse(text)['r-restraints-type']}</p>,
+    },
+    {
+      text: 'Remarks',
+      key: '_id',
+      dataField: 'formVals',
+      // width: 50,
+      formatter: (text) => <p>{JSON.parse(text)['r-remarks']}</p>,
+    },
+    {
+      text: 'Staff',
+      key: '_id',
+      dataField: 'staff',
+      // width: 50,
+    },
+    {
+      text: 'Submitted D/T',
+      key: '_id',
+      dataField: 'creationDate',
+      // width: 50,
+      formatter: (text) => (
+        <p>{moment(text).format('MMMM Do YYYY, h:mm:ss a')}</p>
+      ),
+      // fixed: "right",
+      // width: 100,
+    },
+    {
+      text: 'Changes',
+      key: '_id',
+      dataField: 'changeRequest',
+      // width: 50,
+      formatter: (text) => {
+        let changeRequestString = '';
+        let i = 1;
+        text.map((data) => {
+          console.log(data);
+          changeRequestString =
+            changeRequestString +
+            `${i}. ${data.metadata} COMMENT: ${decryptField(data.comment)}; `;
+          i++;
+        });
+        console.log('new crs', changeRequestString);
+        {
+          return changeRequestString;
+        }
+      },
+
+      // fixed: "right",
+      // width: 100,
+    },
+  ];
 
   return (
     <>
@@ -266,11 +562,23 @@ function PatientProfile(props) {
                   data={restraintsSubmissions}
                 /> */}
                 {restraintsSubmissions && (
-                  <BootstrapTable
-                    keyField="id"
-                    data={restraintsSubmissions}
-                    columns={restraintsColumns}
-                  />
+                  <>
+                    {userRole == 'full' ? (
+                      <BootstrapTable
+                        keyField="id"
+                        data={restraintsSubmissions}
+                        columns={restraintsColumns}
+                        changeRequest={changeRequest}
+                      />
+                    ) : (
+                      <BootstrapTable
+                        keyField="id"
+                        data={restraintsSubmissions}
+                        columns={restraintsColumnsRestricted}
+                        changeRequest={changeRequest}
+                      />
+                    )}
+                  </>
                 )}
               </div>
               <h3>Progress Record Form submission history</h3>
@@ -303,6 +611,22 @@ function PatientProfile(props) {
           {patientError && <p>{patientError}</p>}
         </Space>
       </div>
+
+      <Modal
+        title="Change Request"
+        visible={isModalVisible}
+        onOk={handleChangeRequestSubmit}
+        onCancel={handleCancel}
+      >
+        {changeRequestRow && <p>{changeRequestRow}</p>}
+        {changeRequestComment && <p>{changeRequestComment}</p>}
+        <Input
+          name="changeRequest"
+          onChange={handleChangeRequestComment}
+        ></Input>
+
+        {/* {readmitError && <Alert message={readmitError} type="error" />} */}
+      </Modal>
     </>
   );
 }

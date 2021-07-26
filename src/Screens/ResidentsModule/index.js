@@ -153,15 +153,10 @@ function ResidentsModuleMainList(props) {
       });
   }
 
-  function onChange(sorter) {
-    // console.log('params', sorter);
-  }
-
   function handleReadmitNewBed(e) {
     setReadmitBed(e.target.value);
   }
   function handleChangeMonitoringRestraints(e) {
-    // console.log(e);
     let monitor;
     if (e.restraintsMonitoring) {
       monitor = false;
@@ -385,14 +380,14 @@ function ResidentsModuleMainList(props) {
             <Table
               columns={columns}
               dataSource={patientData}
-              onChange={onChange}
+              // onChange={onChange}
             />
           )}
           {userObject.role == 'restricted' && (
             <Table
               columns={columnsRestricted}
               dataSource={patientData}
-              onChange={onChange}
+              // onChange={onChange}
             />
           )}
           <br></br>
@@ -404,7 +399,7 @@ function ResidentsModuleMainList(props) {
               <Table
                 columns={columnsDischarged}
                 dataSource={dischargedPatientData}
-                onChange={onChange}
+                // onChange={onChange}
               />
             </div>
           )}
@@ -420,7 +415,7 @@ function ResidentsModuleMainList(props) {
           <Input
             name="readmitNewBed"
             addonBefore="Bed"
-            onChange={handleReadmitNewBed}
+            // onChange={handleReadmitNewBed}
           ></Input>
 
           {readmitError && <Alert message={readmitError} type="error" />}
