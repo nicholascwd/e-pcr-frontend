@@ -14,6 +14,9 @@ export const encryptObject = (message) => {
 
 export const decryptField = (ciphertext) => {
   // Encrypt
+  if (!ciphertext) {
+    return;
+  }
   const AESKEY = sessionStorage.getItem('AESKEY');
   let bytes = CryptoJS.AES.decrypt(ciphertext, AESKEY);
   return bytes.toString(CryptoJS.enc.Utf8);
