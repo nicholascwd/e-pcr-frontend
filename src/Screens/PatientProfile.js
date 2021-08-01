@@ -345,7 +345,9 @@ function PatientProfile(props) {
           console.log(data);
           changeRequestString =
             changeRequestString +
-            `[${i}. ${data.metadata} COMMENT: ${decryptField(data.comment)}] `;
+            `[${i}. ${data?.metadata} COMMENT: ${decryptField(
+              data?.comment
+            )}] `;
           i++;
         });
         console.log('new crs', changeRequestString);
@@ -475,7 +477,7 @@ function PatientProfile(props) {
           console.log(data);
           changeRequestString =
             changeRequestString +
-            `${i}. ${data.metadata} COMMENT: ${decryptField(data.comment)}; `;
+            `${i}. ${data?.metadata} COMMENT: ${decryptField(data?.comment)}; `;
           i++;
         });
         console.log('new crs', changeRequestString);
@@ -619,7 +621,6 @@ function PatientProfile(props) {
         onCancel={handleCancel}
       >
         {changeRequestRow && <p>{changeRequestRow}</p>}
-        {changeRequestComment && <p>{changeRequestComment}</p>}
         <Input
           name="changeRequest"
           onChange={handleChangeRequestComment}
