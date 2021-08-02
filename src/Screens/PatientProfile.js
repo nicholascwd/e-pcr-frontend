@@ -248,7 +248,7 @@ function PatientProfile(props) {
         console.log(error);
       });
   }
-
+  //
   const restraintsColumns = [
     {
       text: 'Date',
