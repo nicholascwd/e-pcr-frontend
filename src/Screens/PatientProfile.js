@@ -22,7 +22,7 @@ import {
 } from '../Utils/EncryptContents';
 import { restraintsPdfExport } from './PDFExport/RestraintsExport';
 // import { restraintsColumns } from './FormColumns/RestraintsTable';
-import { progressRecordColumns } from './FormColumns/ProgressRecordTable';
+// import { progressRecordColumns } from './FormColumns/ProgressRecordTable';
 import { progressRecordPdfExport } from './PDFExport/ProgressRecordExport';
 import ChangeRequestModal from './Forms/ChangeRequestModal';
 import PatientCard from './ResidentsModule/PatientCard';
@@ -49,9 +49,6 @@ function PatientProfile(props) {
   const showModal = (e, type) => {
     // setReadmitResident({ uuid: e.uuid, name: e.name });
     // setReadmitError(null);
-    if (type == 'restraints') {
-      console.log('restraints CR');
-    }
     setIsModalVisible(true);
   };
   const handleCancel = () => {
@@ -114,7 +111,7 @@ function PatientProfile(props) {
   }
 
   let changeRequest = (data) => {
-    console.log(data);
+    // console.log(data);
   };
 
   useEffect(() => {
@@ -228,15 +225,21 @@ function PatientProfile(props) {
 
   function handleChangeRequestComment(e) {
     setChangeRequestComment(e.target.value);
-    console.log(e.target.value);
+    // console.log(e.target.value);
   }
 
   function handleChangeRequestSubmit() {
+    let formType;
+    if (changeRequestRow.type == 'restraints') {
+      formType = 'restraintsForm';
+    } else if ((changeRequestRow.type = 'progress')) {
+      formType = 'progressRecordForm';
+    }
     axios
       .post(
-        `${process.env.REACT_APP_API_URL}/forms/restraintsForm/changeRequest`,
+        `${process.env.REACT_APP_API_URL}/forms/${formType}/changeRequest`,
         {
-          _id: changeRequestRow,
+          _id: changeRequestRow.row,
           changeRequestComment: encryptField(changeRequestComment),
         },
         { headers: { token: token } }
@@ -342,7 +345,7 @@ function PatientProfile(props) {
         let changeRequestString = '';
         let i = 1;
         text.map((data) => {
-          console.log(data);
+          // console.log(data);
           changeRequestString =
             changeRequestString +
             `[${i}. ${data?.metadata} COMMENT: ${decryptField(
@@ -367,8 +370,8 @@ function PatientProfile(props) {
         <>
           <Button
             onClick={() => {
-              setChangeRequestRow(data);
-              console.log('add CR, ', data);
+              setChangeRequestRow({ type: 'restraints', row: data });
+              // console.log('add CR, ', data);
               showModal(data, 'restraints');
             }}
           >
@@ -474,13 +477,309 @@ function PatientProfile(props) {
         let changeRequestString = '';
         let i = 1;
         text.map((data) => {
-          console.log(data);
+          // console.log(data);
           changeRequestString =
             changeRequestString +
             `${i}. ${data?.metadata} COMMENT: ${decryptField(data?.comment)}; `;
           i++;
         });
-        console.log('new crs', changeRequestString);
+        // console.log('new crs', changeRequestString);
+        {
+          return changeRequestString;
+        }
+      },
+
+      // fixed: "right",
+      // width: 100,
+    },
+  ];
+
+  const progressRecordColumns = [
+    {
+      text: 'Date',
+      key: '_id',
+      dataField: 'formVals',
+      // fixed: 'left',
+      // width: 100,
+      formatter: (text) => <p>{JSON.parse(text).date}</p>,
+    },
+    {
+      text: 'Time',
+      key: '_id',
+      dataField: 'formVals',
+      formatter: (text) => <p>{JSON.parse(text).time}</p>,
+    },
+    {
+      text: 'General Condition',
+      key: '_id',
+      dataField: 'formVals',
+      formatter: (text) => <p>{JSON.parse(text).p1}</p>,
+    },
+    {
+      text: 'Mental State',
+      key: '_id',
+      dataField: 'formVals',
+      formatter: (text) => <p>{JSON.parse(text).p2}</p>,
+    },
+    {
+      text: 'Skin Care',
+      key: '_id',
+      dataField: 'formVals',
+      formatter: (text) => <p>{JSON.parse(text).p3}</p>,
+    },
+    {
+      text: 'Hygiene/ Bathing',
+      key: '_id',
+      dataField: 'formVals',
+      formatter: (text) => <p>{JSON.parse(text).p4}</p>,
+    },
+    {
+      text: 'Oral Care',
+      key: '_id',
+      dataField: 'formVals',
+      formatter: (text) => <p>{JSON.parse(text).p5}</p>,
+    },
+    {
+      text: 'Feeding',
+      key: '_id',
+      dataField: 'formVals',
+      formatter: (text) => <p>{JSON.parse(text).p6}</p>,
+    },
+    {
+      text: 'Bladder',
+      key: '_id',
+      dataField: 'formVals',
+      formatter: (text) => <p>{JSON.parse(text).p7}</p>,
+    },
+    {
+      text: 'Bowel',
+      key: '_id',
+      dataField: 'formVals',
+      formatter: (text) => <p>{JSON.parse(text).p8}</p>,
+    },
+    {
+      text: 'Mobility',
+      key: '_id',
+      dataField: 'formVals',
+      formatter: (text) => <p>{JSON.parse(text).p9}</p>,
+    },
+    {
+      text: 'Rest at Night',
+      key: '_id',
+      dataField: 'formVals',
+      formatter: (text) => <p>{JSON.parse(text).p10}</p>,
+    },
+    {
+      text: 'Therapy',
+      key: '_id',
+      dataField: 'formVals',
+      formatter: (text) => <p>{JSON.parse(text).p11}</p>,
+    },
+    {
+      text: 'Visited',
+      key: '_id',
+      dataField: 'formVals',
+      formatter: (text) => <p>{JSON.parse(text).p12}</p>,
+    },
+    {
+      text: 'Remarks',
+      key: '_id',
+      dataField: 'formVals',
+      formatter: (text) => <p>{JSON.parse(text)['r-remarks']}</p>,
+    },
+    {
+      text: 'Staff',
+      key: '_id',
+      dataField: 'staff',
+    },
+    {
+      text: 'Submitted D/T',
+      key: '_id',
+      dataField: 'creationDate',
+      formatter: (text) => (
+        <p>{moment(text).format('MMMM Do YYYY, h:mm:ss a')}</p>
+      ),
+      // fixed: 'right',
+      // width: 100,
+    },
+    {
+      text: 'Changes',
+      key: '_id',
+      dataField: 'changeRequest',
+      // width: 50,
+      formatter: (text) => {
+        let changeRequestString = '';
+        let i = 1;
+        if (text) {
+          text.map((data) => {
+            // console.log(data);
+            changeRequestString =
+              changeRequestString +
+              `${i}. ${data?.metadata} COMMENT: ${decryptField(
+                data?.comment
+              )}; `;
+            i++;
+          });
+        }
+
+        // console.log('new crs', changeRequestString);
+        {
+          return changeRequestString;
+        }
+      },
+
+      // fixed: "right",
+      // width: 100,
+    },
+    {
+      text: 'Action',
+      dataField: '_id',
+      // width: 50,
+      formatter: (data) => (
+        <>
+          <Button
+            onClick={() => {
+              setChangeRequestRow({ type: 'progress', row: data });
+              // console.log('add CR, ', data);
+              showModal(data, 'progress');
+            }}
+          >
+            Add Remark
+          </Button>
+        </>
+      ),
+      // fixed: "right",
+      // width: 100,
+    },
+  ];
+
+  const progressRecordColumnsRestricted = [
+    {
+      text: 'Date',
+      key: '_id',
+      dataField: 'formVals',
+      // fixed: 'left',
+      // width: 100,
+      formatter: (text) => <p>{JSON.parse(text).date}</p>,
+    },
+    {
+      text: 'Time',
+      key: '_id',
+      dataField: 'formVals',
+      formatter: (text) => <p>{JSON.parse(text).time}</p>,
+    },
+    {
+      text: 'General Condition',
+      key: '_id',
+      dataField: 'formVals',
+      formatter: (text) => <p>{JSON.parse(text).p1}</p>,
+    },
+    {
+      text: 'Mental State',
+      key: '_id',
+      dataField: 'formVals',
+      formatter: (text) => <p>{JSON.parse(text).p2}</p>,
+    },
+    {
+      text: 'Skin Care',
+      key: '_id',
+      dataField: 'formVals',
+      formatter: (text) => <p>{JSON.parse(text).p3}</p>,
+    },
+    {
+      text: 'Hygiene/ Bathing',
+      key: '_id',
+      dataField: 'formVals',
+      formatter: (text) => <p>{JSON.parse(text).p4}</p>,
+    },
+    {
+      text: 'Oral Care',
+      key: '_id',
+      dataField: 'formVals',
+      formatter: (text) => <p>{JSON.parse(text).p5}</p>,
+    },
+    {
+      text: 'Feeding',
+      key: '_id',
+      dataField: 'formVals',
+      formatter: (text) => <p>{JSON.parse(text).p6}</p>,
+    },
+    {
+      text: 'Bladder',
+      key: '_id',
+      dataField: 'formVals',
+      formatter: (text) => <p>{JSON.parse(text).p7}</p>,
+    },
+    {
+      text: 'Bowel',
+      key: '_id',
+      dataField: 'formVals',
+      formatter: (text) => <p>{JSON.parse(text).p8}</p>,
+    },
+    {
+      text: 'Mobility',
+      key: '_id',
+      dataField: 'formVals',
+      formatter: (text) => <p>{JSON.parse(text).p9}</p>,
+    },
+    {
+      text: 'Rest at Night',
+      key: '_id',
+      dataField: 'formVals',
+      formatter: (text) => <p>{JSON.parse(text).p10}</p>,
+    },
+    {
+      text: 'Therapy',
+      key: '_id',
+      dataField: 'formVals',
+      formatter: (text) => <p>{JSON.parse(text).p11}</p>,
+    },
+    {
+      text: 'Visited',
+      key: '_id',
+      dataField: 'formVals',
+      formatter: (text) => <p>{JSON.parse(text).p12}</p>,
+    },
+    {
+      text: 'Remarks',
+      key: '_id',
+      dataField: 'formVals',
+      formatter: (text) => <p>{JSON.parse(text)['r-remarks']}</p>,
+    },
+    {
+      text: 'Staff',
+      key: '_id',
+      dataField: 'staff',
+    },
+    {
+      text: 'Submitted D/T',
+      key: '_id',
+      dataField: 'creationDate',
+      formatter: (text) => (
+        <p>{moment(text).format('MMMM Do YYYY, h:mm:ss a')}</p>
+      ),
+      // fixed: 'right',
+      // width: 100,
+    },
+    {
+      text: 'Changes',
+      key: '_id',
+      dataField: 'changeRequest',
+      // width: 50,
+      formatter: (text) => {
+        let changeRequestString = '';
+        let i = 1;
+        if (text) {
+          text.map((data) => {
+            changeRequestString =
+              changeRequestString +
+              `${i}. ${data?.metadata} COMMENT: ${decryptField(
+                data?.comment
+              )}; `;
+            i++;
+          });
+        }
+
         {
           return changeRequestString;
         }
@@ -542,7 +841,6 @@ function PatientProfile(props) {
                   onChange={(e) => {
                     let endDate = e[1];
                     endDate = moment(endDate).endOf('day');
-                    // console.log(moment(endDate).format());
                     setRestraintsDatePicker([e[0], endDate]);
                   }}
                 />
@@ -592,19 +890,24 @@ function PatientProfile(props) {
                 Export Progress Record Data
               </Button>
               <div className="pcf">
-                {/* <RCTable
-                  style={{ width: mobileView ? 400 : 1100 }}
-                  scroll={{ x: 300 }}
-                  columns={progressRecordColumns}
-                  data={progressRecordSubmissions}
-                  className="table"
-                /> */}
                 {progressRecordSubmissions && (
-                  <BootstrapTable
-                    keyField="id"
-                    data={progressRecordSubmissions}
-                    columns={progressRecordColumns}
-                  />
+                  <>
+                    {userRole == 'full' ? (
+                      <BootstrapTable
+                        keyField="id"
+                        data={progressRecordSubmissions}
+                        columns={progressRecordColumns}
+                        changeRequest={changeRequest}
+                      />
+                    ) : (
+                      <BootstrapTable
+                        keyField="id"
+                        data={progressRecordSubmissions}
+                        columns={progressRecordColumnsRestricted}
+                        changeRequest={changeRequest}
+                      />
+                    )}
+                  </>
                 )}
               </div>
             </>
@@ -620,7 +923,7 @@ function PatientProfile(props) {
         onOk={handleChangeRequestSubmit}
         onCancel={handleCancel}
       >
-        {changeRequestRow && <p>{changeRequestRow}</p>}
+        {changeRequestRow && <p>{changeRequestRow.row}</p>}
         <Input
           name="changeRequest"
           onChange={handleChangeRequestComment}
