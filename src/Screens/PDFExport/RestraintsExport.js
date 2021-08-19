@@ -33,6 +33,16 @@ export const restraintsPdfExport = (patientData, restraintsSubmissions) => {
         'MMMM Do YYYY, h:mm:ss a'
       )
     );
+    let changeRequestString = '';
+    let j = 1;
+    restraintsSubmissions[i].changeRequest.map((data) => {
+      changeRequestString =
+        changeRequestString +
+        `[${j}. ${data?.metadata} COMMENT: ${decryptField(data?.comment)}] `;
+      j++;
+    });
+
+    row.push(changeRequestString);
     tableData.push(row);
   }
 
@@ -52,6 +62,7 @@ export const restraintsPdfExport = (patientData, restraintsSubmissions) => {
         'Remarks',
         'Staff Signature',
         'Submission D/T',
+        'Changes',
       ],
     ],
     body: tableData,

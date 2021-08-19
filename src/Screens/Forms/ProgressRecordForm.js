@@ -177,7 +177,7 @@ function ProgressRecordForm(props) {
                 <Form.Item name="p3" label="3. Skin Care">
                   <Radio.Group>
                     <Radio value="Intact">Intact</Radio>
-                    <Radio value="Impaired/Rashes">Impaired/Rashes</Radio>
+                    <Radio value="Impaired/Rashes">Impaired</Radio>
                     <Radio value="Wound Care">Wound Care</Radio>
                     <Radio value="">NA</Radio>
                   </Radio.Group>
@@ -222,10 +222,6 @@ function ProgressRecordForm(props) {
                     <Checkbox value="Bowel Opened ">Bowel Opened</Checkbox>
                     <Checkbox value="Bowel Not Opened">
                       Bowel Not Opened
-                    </Checkbox>
-                    <Checkbox value="Continent ">Continent</Checkbox>
-                    <Checkbox value="Incontinent (Diaper) ">
-                      Incontinent (Diaper)
                     </Checkbox>
                     <Checkbox value="Colostomy Care ">Colostomy Care</Checkbox>
                   </Checkbox.Group>

@@ -41,6 +41,18 @@ export const progressRecordPdfExport = (
         'MMMM Do YYYY, h:mm:ss a'
       )
     );
+
+    let changeRequestString = '';
+    let j = 1;
+    progressRecordSubmissions[i].changeRequest.map((data) => {
+      changeRequestString =
+        changeRequestString +
+        `[${j}. ${data?.metadata} COMMENT: ${decryptField(data?.comment)}] `;
+      j++;
+    });
+
+    row.push(changeRequestString);
+
     tableData.push(row);
   }
 
@@ -67,6 +79,7 @@ export const progressRecordPdfExport = (
         'Remarks',
         'Staff Signature',
         'Submission D/T',
+        'Changes',
       ],
     ],
     body: tableData,
