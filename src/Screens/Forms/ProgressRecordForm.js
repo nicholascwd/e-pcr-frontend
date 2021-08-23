@@ -177,7 +177,7 @@ function ProgressRecordForm(props) {
                 <Form.Item name="p3" label="3. Skin Care">
                   <Radio.Group>
                     <Radio value="Intact">Intact</Radio>
-                    <Radio value="Impaired/Rashes">Impaired</Radio>
+                    <Radio value="Impaired">Impaired</Radio>
                     <Radio value="Wound Care">Wound Care</Radio>
                     <Radio value="">NA</Radio>
                   </Radio.Group>
