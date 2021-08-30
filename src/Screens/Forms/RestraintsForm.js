@@ -32,6 +32,9 @@ function RestraintsForm(props) {
   const [patientData, setPatientData] = useState();
   const [patientError, setPatientError] = useState();
   const [selectedDateTime, setSelectedDateTime] = useState(null);
+  const [isLate, setIsLate] = useState(false);
+  const [lateReason, setLateReason] = useState();
+  const [initialDateSet, setInitialDateSet] = useState(0);
   const [staff, setStaff] = useState();
   const [submitted, setSubmitted] = useState(false);
 
@@ -74,6 +77,11 @@ function RestraintsForm(props) {
       return;
     }
 
+    if (isLate) {
+      values['r-remarks'] =
+        '(LATE/EARLY: ' + lateReason + ') ' + values['r-remarks'];
+    }
+
     const dateTime = moment(values['date']).startOf('day');
     values['date'] = values['date'].format('YYYY-MM-DD');
     console.log('Received values of form: ', JSON.stringify(values));
@@ -106,6 +114,20 @@ function RestraintsForm(props) {
     props.history.push('/patient_profile/' + patientData.bed, '_self');
   }
 
+  function checkIfLate() {
+    console.log(selectedDateTime);
+    const currentDateTime = moment();
+    const timeDiff = Math.abs(
+      currentDateTime.diff(selectedDateTime, 'minutes')
+    );
+
+    if (timeDiff > 60) {
+      setIsLate(true);
+    } else {
+      setIsLate(false);
+    }
+  }
+
   return (
     <>
       <Button
@@ -121,44 +143,74 @@ function RestraintsForm(props) {
           {patientData && staff && !submitted && (
             <>
               <PatientCard patientData={patientData} />
-
               <Form
                 name="validate_other"
                 {...formItemLayout}
                 onFinish={onFinish}
               >
                 <Form.Item name="date" label="Date" required>
-                  <DatePicker />
+                  <DatePicker
+                    onChange={(data) => {
+                      console.log('new data', data);
+                      setSelectedDateTime(null);
+                      data?.startOf('day');
+                      setSelectedDateTime(data);
+                      if (initialDateSet == 1) {
+                        location.reload();
+                      }
+                      console.log(initialDateSet);
+                      setInitialDateSet(1);
+                      checkIfLate();
+                    }}
+                  />
                 </Form.Item>
-
-                <Form.Item
-                  onChange={() => {
-                    console.log('time change');
-                  }}
-                  name="time"
-                  label="Time"
-                  required
-                >
-                  <Select placeholder="Select time of check" virtual={false}>
-                    <Option value="0000">0000</Option>
-                    <Option value="0200">0200</Option>
-                    <Option value="0400">0400</Option>
-                    <Option value="0600">0600</Option>
-                    <Option value="0800">0800</Option>
-                    <Option value="1000">1000</Option>
-                    <Option value="1200">1200</Option>
-                    <Option value="1400">1400</Option>
-                    <Option value="1600">1600</Option>
-                    <Option value="1800">1800</Option>
-                    <Option value="2000">2000</Option>
-                    <Option value="2200">2200</Option>
-                  </Select>
-                </Form.Item>
-
                 {selectedDateTime && (
                   <>
-                    <p>{selectedDateTime}</p>
-                    <p>{}</p>
+                    <Form.Item name="time" label="Time" required>
+                      <Select
+                        value={'0200'}
+                        placeholder="Select time of check"
+                        virtual={false}
+                        onChange={(data) => {
+                          const time = Number(data) / 100;
+                          let date = selectedDateTime;
+                          date?.startOf('day');
+                          date?.add(time, 'hours');
+                          // console.log('data ',  date);
+                          setSelectedDateTime(date);
+                          checkIfLate();
+                        }}
+                      >
+                        <Option value="0000">0000</Option>
+                        <Option value="0200">0200</Option>
+                        <Option value="0400">0400</Option>
+                        <Option value="0600">0600</Option>
+                        <Option value="0800">0800</Option>
+                        <Option value="1000">1000</Option>
+                        <Option value="1200">1200</Option>
+                        <Option value="1400">1400</Option>
+                        <Option value="1600">1600</Option>
+                        <Option value="1800">1800</Option>
+                        <Option value="2000">2000</Option>
+                        <Option value="2200">2200</Option>
+                      </Select>
+                    </Form.Item>
+                  </>
+                )}
+
+                {isLate && (
+                  <>
+                    <h1 style={{ fontSize: 30, color: 'red' }}>
+                      Time out of range, provide reason below
+                    </h1>
+                    <Input
+                      type="text"
+                      placeholder="Reason for Late or Early"
+                      onChange={(data) => {
+                        setLateReason(data.target.value);
+                      }}
+                    ></Input>
+                    <br></br>
                   </>
                 )}
 
@@ -220,12 +272,32 @@ function RestraintsForm(props) {
                 <Form.Item name="staff" label="Submitted by">
                   <span className="ant-form-text">{staff}</span>
                 </Form.Item>
+                {isLate && lateReason && (
+                  <>
+                    <Form.Item>
+                      <Button type="primary" htmlType="submit">
+                        Submit
+                      </Button>
+                    </Form.Item>
+                  </>
+                )}
+                {isLate && !lateReason && (
+                  <>
+                    <h2>
+                      Please fill in late or early reason before submitting
+                    </h2>
+                  </>
+                )}
 
-                <Form.Item>
-                  <Button type="primary" htmlType="submit">
-                    Submit
-                  </Button>
-                </Form.Item>
+                {!isLate && (
+                  <>
+                    <Form.Item>
+                      <Button type="primary" htmlType="submit">
+                        Submit
+                      </Button>
+                    </Form.Item>
+                  </>
+                )}
               </Form>
             </>
           )}
@@ -244,7 +316,6 @@ function RestraintsForm(props) {
               ]}
             />
           )}
-
           {patientError && <p>{patientError}</p>}
         </Space>
       </div>
