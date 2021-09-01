@@ -415,7 +415,7 @@ function ResidentsModuleMainList(props) {
           <Input
             name="readmitNewBed"
             addonBefore="Bed"
-            // onChange={handleReadmitNewBed}
+            onChange={handleReadmitNewBed}
           ></Input>
 
           {readmitError && <Alert message={readmitError} type="error" />}
