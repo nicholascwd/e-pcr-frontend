@@ -79,7 +79,9 @@ function RestraintsForm(props) {
 
     if (isLate) {
       values['r-remarks'] =
+
         '(LATE REASON: ' + lateReason + ') ' + values['r-remarks'];
+
     }
 
     const dateTime = moment(values['date']).startOf('day');
@@ -121,7 +123,9 @@ function RestraintsForm(props) {
       currentDateTime.diff(selectedDateTime, 'minutes')
     );
 
+
     if (timeDiff > 30) {
+
       setIsLate(true);
     } else {
       setIsLate(false);
@@ -201,11 +205,13 @@ function RestraintsForm(props) {
                 {isLate && (
                   <>
                     <h1 style={{ fontSize: 30, color: 'red' }}>
+
                       Late submission, provide reason below
                     </h1>
                     <Input
                       type="text"
                       placeholder="Reason for Late submission"
+
                       onChange={(data) => {
                         setLateReason(data.target.value);
                       }}
