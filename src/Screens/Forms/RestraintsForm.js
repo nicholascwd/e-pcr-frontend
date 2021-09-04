@@ -122,6 +122,7 @@ function RestraintsForm(props) {
 
     if (timeDiff > 30) {
       console.log('LATE ', timeDiff);
+
       setIsLate(true);
       setIsEarly(false);
     } else if (timeDiff < -30) {
@@ -208,6 +209,7 @@ function RestraintsForm(props) {
                 {isLate && (
                   <>
                     <h1 style={{ fontSize: 30, color: 'red' }}>
+
                       Late submission, provide reason below
                     </h1>
                     <Input
