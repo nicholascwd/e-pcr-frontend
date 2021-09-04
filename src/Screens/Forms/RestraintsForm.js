@@ -33,6 +33,7 @@ function RestraintsForm(props) {
   const [patientError, setPatientError] = useState();
   const [selectedDateTime, setSelectedDateTime] = useState(null);
   const [isLate, setIsLate] = useState(false);
+  const [isEarly, setIsEarly] = useState(false);
   const [lateReason, setLateReason] = useState();
   const [initialDateSet, setInitialDateSet] = useState(0);
   const [staff, setStaff] = useState();
@@ -79,9 +80,7 @@ function RestraintsForm(props) {
 
     if (isLate) {
       values['r-remarks'] =
-
         '(LATE REASON: ' + lateReason + ') ' + values['r-remarks'];
-
     }
 
     const dateTime = moment(values['date']).startOf('day');
@@ -119,16 +118,21 @@ function RestraintsForm(props) {
   function checkIfLate() {
     console.log(selectedDateTime);
     const currentDateTime = moment();
-    const timeDiff = Math.abs(
-      currentDateTime.diff(selectedDateTime, 'minutes')
-    );
-
+    const timeDiff = currentDateTime.diff(selectedDateTime, 'minutes');
 
     if (timeDiff > 30) {
+      console.log('LATE ', timeDiff);
 
       setIsLate(true);
-    } else {
+      setIsEarly(false);
+    } else if (timeDiff < -30) {
+      console.log('EARLY ', timeDiff);
       setIsLate(false);
+      setIsEarly(true);
+    } else {
+      console.log('CORRECT TIME ', timeDiff);
+      setIsLate(false);
+      setIsEarly(false);
     }
   }
 
@@ -211,11 +215,20 @@ function RestraintsForm(props) {
                     <Input
                       type="text"
                       placeholder="Reason for Late submission"
-
                       onChange={(data) => {
                         setLateReason(data.target.value);
                       }}
                     ></Input>
+                    <br></br>
+                  </>
+                )}
+                {isEarly && (
+                  <>
+                    <h1 style={{ fontSize: 30, color: 'red' }}>
+                      Selected time is in the future. Early submission is not
+                      allowed (30 mins)
+                    </h1>
+
                     <br></br>
                   </>
                 )}
@@ -278,7 +291,7 @@ function RestraintsForm(props) {
                 <Form.Item name="staff" label="Submitted by">
                   <span className="ant-form-text">{staff}</span>
                 </Form.Item>
-                {isLate && lateReason && (
+                {isLate && lateReason && !isEarly && (
                   <>
                     <Form.Item>
                       <Button type="primary" htmlType="submit">
@@ -295,7 +308,7 @@ function RestraintsForm(props) {
                   </>
                 )}
 
-                {!isLate && (
+                {!isLate && !isEarly && (
                   <>
                     <Form.Item>
                       <Button type="primary" htmlType="submit">
