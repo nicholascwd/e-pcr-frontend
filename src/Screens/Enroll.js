@@ -22,6 +22,9 @@ function Enroll(props) {
   }, []);
 
   const handleEnroll = () => {
+    if(!passphrase.value){
+      return setError('Enrollment Key Invalid. Please try again.')
+    }
     setError(null);
     setLoading(true);
     axios
