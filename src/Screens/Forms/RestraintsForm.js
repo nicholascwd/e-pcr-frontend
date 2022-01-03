@@ -80,7 +80,7 @@ function RestraintsForm(props) {
 
     if (isLate) {
       values['r-remarks'] =
-        '(LATE REASON: ' + lateReason + ') ' + values['r-remarks'];
+        '(LATE REASON: ' + lateReason + ') ' + values['r-remarks']??"";
     }
 
     const dateTime = moment(values['date']).startOf('day');
