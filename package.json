@@ -14,7 +14,7 @@
     "bootstrap": "^5.1.3",
     "crypto-js": "^4.1.1",
     "dotenv": "^10.0.0",
-    "jspdf": "^2.5.0",
+    "jspdf": "^2.5.1",
     "jspdf-autotable": "^3.5.20",
     "moment-timezone": "^0.5.34",
     "owasp-password-strength-test": "^1.3.0",
